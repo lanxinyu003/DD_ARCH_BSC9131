@@ -1,0 +1,170 @@
+configuration
+view os_release
+
+    Switch_To_Rom = TRUE
+    String_To_Rom = TRUE
+    Uninit_Globals_To_Bss = TRUE
+    Init_To_Rom = TRUE
+    Allconst_To_Rom = TRUE
+    CC_40Bit_In_Reg = TRUE
+    loop_on_unsigned_int = TRUE
+
+
+    module "os_bio"
+    [
+        opt_level = O3
+    ]
+
+    module "os_cio"
+    [
+        opt_level = O3
+    ]
+
+    module "os_cop"
+    [
+        opt_level = O3
+    ]
+        
+    module "os_event_queue"
+    [
+        opt_level = O3
+    ]
+
+    module "os_event_semaphore"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_event"
+    [
+        opt_level = O3
+    ]
+
+    module "os_frame"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_hw_watchdogs"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_log_event"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_message_queue"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_queue"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_sio"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_swi"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_sync"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_task"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_tick"
+    [
+        opt_level = O3
+    ]
+    
+    module "os_timer"
+    [
+        opt_level = O3
+    ]
+    
+    module "hw_sem"
+    [
+        opt_level = O3
+    ]
+    
+    module "hw_timers"
+    [
+        opt_level = O3
+    ]
+
+    module "psc913x_ipc"
+    [
+        opt_level = O3
+    ]
+
+    module "sc3x00_cache"
+    [
+        opt_level = O3
+    ]
+
+    module "sc3x00_messages"
+    [
+        opt_level = O3
+    ]
+
+    module "sc3x00_mmu"
+    [
+        opt_level = O3
+    ]
+
+    module "sc3x00_tick"
+    [
+        opt_level = O3
+    ]
+
+    module "starcore_swi"
+    [
+        opt_level = O3
+    ]
+    
+    module "starcore_utils"
+    [
+        opt_level = O3
+    ]
+    
+    module "hw_watchdogs"
+    [
+        opt_level = O3
+    ]
+    
+    module "psc9x3x_hwi"
+    [
+        opt_level = O3
+    ]
+
+    module "sc3x00_log"
+    [
+        opt_level = O3
+    ]
+
+    module "starcore_hwi"
+    [
+        opt_level = O3
+    ]
+
+    module "class_profiling"
+    [
+        opt_level = O3
+    ]    
+        
+        
+end view
+end configuration

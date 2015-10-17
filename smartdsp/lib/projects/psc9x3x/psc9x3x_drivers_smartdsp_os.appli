@@ -1,0 +1,84 @@
+configuration
+view drivers_release
+
+    Switch_To_Rom = TRUE
+    String_To_Rom = TRUE
+    Uninit_Globals_To_Bss = TRUE
+    Init_To_Rom = TRUE
+    Allconst_To_Rom = TRUE
+    CC_40Bit_In_Reg = TRUE
+    loop_on_unsigned_int = TRUE
+    
+    module "dma"
+    [
+        opt_level = O3
+    ]
+   
+    module "maple_crcpe"
+    [
+        opt_level = O3
+    ]
+
+    module "maple_depe"
+    [
+        opt_level = O3
+    ]
+    
+    module "maple_ftpe"
+    [
+        opt_level = O3
+    ]
+    
+    module "maple_pdsch"
+    [
+        opt_level = O3
+    ]
+    
+    module "maple_pufft"
+    [
+        opt_level = O3
+    ]
+    
+    module "maple_pusch"
+    [
+        opt_level = O3
+    ]
+    
+    module "maple_tvpe"
+    [
+        opt_level = O3
+    ]
+
+    module "maple"
+    [
+        opt_level = O3
+    ]
+        
+    module "maple_eqpe"
+    [
+        opt_level = O3
+    ]
+    
+    module "cpri"
+    [
+        opt_level = O3
+    ]
+    
+    module "aic"
+    [
+        opt_level = O3
+    ]
+    
+    module "psc9x3x_debug_print"
+    [
+        opt_level = O3
+    ]
+    
+    module "tdm"
+    [
+        opt_level = O3
+    ]
+    
+    
+end view
+end configuration

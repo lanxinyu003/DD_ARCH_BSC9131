@@ -1,0 +1,38 @@
+/* Definitions */
+
+/* Set to 1 for fprintf() and compiler defined malloc support */
+#define USING_RTLIB         1
+/* Set to 1 if USER_KERNEL_AWARENESS_STACK is set to 1 in os_config.h */
+#define USING_USER_KA_STACK 0   
+/* Set to 1 for automatic VTB configuration */
+#define USING_VTB           0   
+
+arch(msc8156);
+number_of_cores(1);
+
+// Define the size of stack.
+ _StackSize = 0x7f00;
+
+_ID_CORE = core_id ();
+
+entry ("___crt0_start");
+
+// General defines that should not be changed when porting
+// Include MMU defines for SC3850
+#include "../../../smartdsp/include/arch/starcore/core_family/sc3X00/sc3x00_mmu_link_defines.l3k"
+
+// Application and ADS specific defines
+#include "../../../smartdsp/include/arch/starcore/core_family/sc3X00/sc3x00_mmu_link_app.l3k"
+
+// Include memory ranges defines for PCS9131
+#include "../../../smartdsp/include/arch/starcore/psc9x3x/os_psc9x3x_link_defines.l3k"
+
+// Include memory ranges defines for RDB (DDR0 and DDR1)
+#include "../../../rdb_support/os_psc9x31_linker_rdb_defines.l3k"
+
+// Include memory map for application defines
+#include "psc9x31_memory_map_link.l3k"
+
+// NO SHARED MEMORY SPACE
+
+#include "psc9x31_local_map_link.l3k"

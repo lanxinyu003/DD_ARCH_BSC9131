@@ -1,0 +1,54 @@
+configuration
+
+view maple_release
+
+    section
+        program = [MAPLE_LIB_CODE: ".oskernel_text_initialization"]
+        rom       = [MAPLE_LIB_ROM:  ".oskernel_rom"]
+        data      = [MAPLE_LIB_DATA: ".os_shared_data"]
+        bss       = [DP_LIB_BSS: ".os_shared_data_bss"]
+    end section
+
+    program = MAPLE_LIB_CODE
+    rom       = MAPLE_LIB_ROM
+    data      = MAPLE_LIB_DATA
+    bss       = DP_LIB_BSS
+
+	Switch_To_Rom = TRUE
+    String_To_Rom = TRUE
+    Uninit_Globals_To_Bss = TRUE
+    Init_To_Rom = TRUE
+    AllConst_To_Rom = TRUE
+
+    opt_level = O3
+
+end view
+
+view maple_debug
+
+    section
+        program = [MAPLE_LIB_CODE: ".oskernel_text_initialization"]
+        rom       = [MAPLE_LIB_ROM:  ".oskernel_rom"]   
+        data      = [MAPLE_LIB_DATA: ".os_shared_data"]
+        bss       = [DP_LIB_BSS: ".os_shared_data_bss"]
+    end section
+
+    program = MAPLE_LIB_CODE
+    rom       = MAPLE_LIB_ROM
+    data      = MAPLE_LIB_DATA
+    bss       = DP_LIB_BSS
+
+    Switch_To_Rom = TRUE
+    String_To_Rom = TRUE
+    Uninit_Globals_To_Bss = TRUE
+    Init_To_Rom = TRUE
+    AllConst_To_Rom = TRUE
+
+    opt_level = O0
+
+end view
+   
+end configuration
+
+
+

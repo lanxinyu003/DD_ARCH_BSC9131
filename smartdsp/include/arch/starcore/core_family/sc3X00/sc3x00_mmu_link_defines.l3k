@@ -1,0 +1,39 @@
+
+ MMU_PROG_DEF_SYSTEM =                          0x00000010;
+ MMU_PROG_DEF_CACHEABLE =                       0x00000008;
+ MMU_PROG_DEF_XPERM_USER =                      0x00000004;
+ MMU_PROG_DEF_XPERM_SUPER =                     0x00000002;
+
+ MMU_PROG_PREFETCH_ENABLE =                     0x00040000;
+// MMU_PROG_BURST_SIZE_8 =                      0x00030000;	// - not available in 815x
+ MMU_PROG_BURST_SIZE_4 =                        0x00020000;
+ MMU_PROG_BURST_SIZE_2 =                        0x00010000;
+ MMU_PROG_BURST_SIZE_1 =                        0x00000000;
+ MMU_PROG_L2_CACHEABLE =                        0x00080000;
+ MMU_PROG_L2_NONCACHEABLE =                     0x00000000;
+
+ MMU_DATA_DEF_SYSTEM =                          0x00000020;
+ MMU_DATA_DEF_WPERM_USER =                      0x00000008;
+ MMU_DATA_DEF_RPERM_USER =                      0x00000010;
+ MMU_DATA_DEF_WPERM_SUPER =                     0x00000002;
+ MMU_DATA_DEF_RPERM_SUPER =                     0x00000004;
+
+ MMU_DATA_CACHEABLE_WRITETHROUGH =              0x00000000;
+ MMU_DATA_CACHEABLE_WRITEBACK =                 0x00400000;
+ MMU_DATA_NONCACHEABLE_WRITETHROUGH =           0x00800000;
+ MMU_DATA_NONCACHEABLE_WRITETHROUGH_DESTRUCT =  0x00C00000;
+
+ MMU_DATA_PREFETCH_ENABLE =                     0x00040000;
+// MMU_DATA_BURST_SIZE_8 =                      0x00030000;	// - not available in 815x
+ MMU_DATA_BURST_SIZE_4 =                        0x00020000;
+ MMU_DATA_BURST_SIZE_2 =                        0x00010000;
+ MMU_DATA_BURST_SIZE_1 =                        0x00000000;
+
+ MMU_DATA_L2_CACHEABLE_WRITETHROUGH =           0x00000000;
+ MMU_DATA_L2_CACHEABLE_WRITEBACK =              0x00080000;
+ MMU_DATA_L2_NONCACHEABLE =                     0x00100000;
+ MMU_DATA_L2_ADAPTIVE_WRITE =                   0x00180000;
+
+// MMU_FLEX_SEGMENT_MODEL =                     0x80000000;	// - will be set by the startup hooks
+ MMU_NEXT_LINE_PREFETCH =                       0x40000000;
+

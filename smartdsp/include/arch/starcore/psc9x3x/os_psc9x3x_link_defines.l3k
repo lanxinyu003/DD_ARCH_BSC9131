@@ -1,0 +1,26 @@
+
+//
+// Define configuration specific values
+//
+
+       _SR_Setting = 0x3e4000c;     // The value to set the SR after reset:
+                                    // exception mode
+                                    // interrupt level 31
+                                    // saturation on
+                                    // rounding mode: nearest even
+
+////////////// Local memory definitions for start up file //////
+ _M2Global_b = 0xB0000000;
+
+// Physical memory definitions 
+ _M2_b       = (_M2Global_b + _ID_CORE*0x01000000);
+ _M2_L2_Size = 0x80000;
+ _M2_e       = (_M2_b + _M2_L2_Size);
+
+// Relevant for PSC9132 only; 32KB of M3 
+ _M3_b       = 0xC0000000;		// M3 beginning
+ _M3_size    = 0x00008000;
+ _M3_e       = (_M3_b + _M3_size);
+
+_PA_CCSR_b   = 0xFEF00000;
+_PA_CCSR_size= 0x100000;

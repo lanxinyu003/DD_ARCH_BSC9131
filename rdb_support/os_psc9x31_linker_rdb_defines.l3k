@@ -1,0 +1,30 @@
+
+// PSC9131 DDR1 new System map:
+// +---------------+ 
+// |    PA Only    |
+// |    PA r/w     |
+// .    SC -/-     .
+// +===============+ 
+// |    PA r/w     | }PA owns memory allocator. Cacheable in SmartDSP OS
+// |    SC r/w     | }
+// +---------------+ 
+// |    PA r/w     | }SC owns memory allocator. Cacheable in SmartDSP OS
+// |    SC r/w     | }
+// +===============+ 
+// |    Control    | }4KB (part of the PA owned memory below). Non-cacheable in SmartDSP OS
+// +===============+ 
+// |    SC Only    |
+// |    PA r/-     | (at boot time, PA r/w)
+// |    SC r/w     |
+// +---------------+
+
+// physical memory on board
+ _DDR1_b    = 0x38000000;			   // start of SC space in DDR1 
+ _DDR1_size = 0x08000000;		       // size of SC space in DDR1
+ _DDR1_e    = (_DDR1_b + _DDR1_size) - 1;
+  
+ // 4KB part of the PA owned memory. Non-cacheable in SmartDSP OS
+ __SHARED_CTRL_b    = 0x37000000;	// Shared Control PA DDR base address
+ __SHARED_CTRL_size = 0x1000;
+ ASSERT ((__SHARED_CTRL_size == 0x1000),"__SHARED_CTRL_size MUST start out as 4KB"); 
+ 
