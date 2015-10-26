@@ -34,6 +34,22 @@
 #include "smartdsp_os.h"
 #include "smartdsp_init.h"
 
+typedef enum tasktype
+{
+    PHOENIX_TSK_PRITASK,
+    PHOENIX_TSK_INTTASK
+}PHOENIX_TASKTYPE;
+
+typedef void (* PHOENIX_TSKFUNC)(void);
+
+typedef uint8_t   PHOENIX_TASKPRI;
+typedef uint16_t  PHOENIX_TASKID;
+typedef uint16_t  PHOENIX_STKSIZE;
+
+typedef enum PHOENIX_ITC_INTVECTOR
+{/* This type will be redefined in kernel. But for using easily, maybe we can locate them here also. */
+    NULLVECTOR = -1,
+}PHOENIX_INTVECTOR;
 
 #endif // __SMARTDSP_OS_H_
 

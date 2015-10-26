@@ -70,8 +70,8 @@ unit private (*) {
 		local_data_descriptor                  ("rw"): AFTER(os_kernel_text_descriptor);
         os_shared_data_descriptor              ("rw"): AFTER(local_data_descriptor);         
         local_data_ddr1_descriptor             ("rw"): org = _VirtLocalDataDDR1_b; 
-        local_data_ddr1_nocacheable_descriptor ("rw"): AFTER(local_data_ddr1_descriptor);
-        ddr_text_c                             ("rx"): AFTER(local_data_ddr1_nocacheable_descriptor); 
+        local_data_ddr1_nocacheable_descriptor ("rw"): AFTER(local_data_ddr1_descriptor); 
+        ddr_text_c                             ("rx"): AFTER(local_data_ddr1_nocacheable_descriptor);
 	}  
 	
     SECTIONS {
@@ -117,6 +117,8 @@ unit private (*) {
         descriptor__ddr__cacheable__sys__text {
 			.os_intvec
 			.dd_intvec_text
+			//.ddr__cacheable__sys__text
+			//unmatch_pgm("*");
 		} > ddr_text_c;
                 
        descriptor_os_kernel_text {
@@ -144,8 +146,8 @@ address_translation (*) map11 {
 address_translation (*) {
     os_shared_data_descriptor              (SHARED_DATA_MMU_DEF):LOCAL_M2,   AFTER(local_data_descriptor);
     local_data_ddr1_descriptor             (SYSTEM_DATA_MMU_DEF):LOCAL_DDR1, org = _PhysLocalDataDDR1_b;
-    local_data_ddr1_nocacheable_descriptor (SHARED_DATA_MMU_DEF):LOCAL_DDR1, AFTER(local_data_ddr1_descriptor);  
-    ddr_text_c                             (SYSTEM_PROG_MMU_DEF):LOCAL_DDR1, AFTER(local_data_ddr1_nocacheable_descriptor);   
+    local_data_ddr1_nocacheable_descriptor (SHARED_DATA_MMU_DEF):LOCAL_DDR1, AFTER(local_data_ddr1_descriptor); 
+    ddr_text_c                             (SYSTEM_PROG_MMU_DEF):LOCAL_DDR1, AFTER(local_data_ddr1_nocacheable_descriptor);  
      
     
 #if  ((USING_USER_KA_STACK == 1) || (USING_RTLIB == 1) || (USING_VTB == 1))

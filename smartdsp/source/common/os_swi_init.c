@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright © 1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
+ Copyright ï¿½1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
  All Rights Reserved
  
  This is proprietary source code of Freescale Semiconductor Inc., and its use
@@ -43,6 +43,13 @@ volatile os_swi_struct_     *g_active_swi_ptr = NULL;
 
 extern volatile uint16_t    g_os_flags;
 
+extern PHOENIX_TASKID os_create_task(PHOENIX_TASKTYPE task_type,
+                                    PHOENIX_TSKFUNC entry_function,
+                                    void * para_data,
+                                    PHOENIX_TASKID task_id,
+                                    PHOENIX_STKSIZE stack_size,
+                                    PHOENIX_TASKPRI task_priority,
+                                    PHOENIX_INTVECTOR task_vector);
 
 /*****************************************************************************/
 os_status osSwiInitialize(uint16_t max_swi)
@@ -84,6 +91,7 @@ os_status osSwiInitialize(uint16_t max_swi)
     return status;
 }
 
+//uint32_t phoenix_find_int_task_id()
 
 /*****************************************************************************/
 os_status osSwiCreate(os_swi_function   handler,
@@ -91,6 +99,16 @@ os_status osSwiCreate(os_swi_function   handler,
                       os_swi_priority   priority,
                       os_user_id        user_id)
 {
+     (void)os_create_task(PHOENIX_TSK_INTTASK,
+    		 	   (PHOENIX_TSKFUNC)handler,
+                   0,
+                   swi_num,
+                   0,
+                   priority,
+                   (PHOENIX_INTVECTOR)(swi_num - 18)); 
+     
+    return OS_SUCCESS;
+#if 0
     os_hwi_status int_status;
 #ifdef MMU_SUPPORT
 #if defined(SC3X00) || defined(SC3X50)
@@ -159,6 +177,7 @@ os_status osSwiCreate(os_swi_function   handler,
     osHwiEnable(int_status);
 
     return OS_SUCCESS;
+#endif
 }
 
 /*****************************************************************************/

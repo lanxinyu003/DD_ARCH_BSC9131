@@ -261,8 +261,8 @@ void os_smartdsp_init()
 
     /* Start the OS with the background task. OS ticks now start.
        appBackground() should not return unless there is an error. */
-    status = osStart(appBackground);
-    if (status != OS_SUCCESS) OS_ASSERT;
+     //status = osStart(appBackground);
+    //if (status != OS_SUCCESS) OS_ASSERT;
 
     /* Execution reaches this point only if an error occurs. */
 }

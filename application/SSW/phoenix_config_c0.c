@@ -28,13 +28,13 @@ u8 g_u8_Pool0Buffer[98512 +	8];
 u8 g_u8_Pool1Buffer[512000 + 8];
 u8 g_u8_Pool2Buffer[524288];
 u8 g_u8_Pool3Buffer[32768 +	8];
-u8 g_u8_Pool4Buffer[5120000 + 8]; 
+//u8 g_u8_Pool4Buffer[5120000 + 8]; 
 
 #pragma	align g_u8_Pool0Buffer 8
 #pragma	align g_u8_Pool1Buffer 8
 #pragma	align g_u8_Pool2Buffer 256
 #pragma	align g_u8_Pool3Buffer 8
-#pragma	align g_u8_Pool4Buffer 8
+//#pragma	align g_u8_Pool4Buffer 8
 
 // Configure the pool database
 OS_POOL_DB g_struOsPoolDB[]	=
@@ -55,7 +55,8 @@ void os_create_tasks(void)
 		0x0, /*pdata*/
 		512	/*in sizeof(C64_STACK) 8bit*/
 		);
-#if 0	
+#if 0
+	
 	os_create_task(OS_TSK_PRITASK, /*task type*/
 		appBackground,	/*task entry function*/
 		0x0, /*pdata*/
@@ -63,8 +64,7 @@ void os_create_tasks(void)
 		4096, /*in sizeof(C64_STACK) 8bit*/
 		24,	/*priority*/
 		NULLVECTOR); /*interrupt pin*/
-
-
+	
 	os_create_task(OS_TSK_PRITASK, /*task type*/
 		t_dsp_check_io,	/*task entry function*/
 		0x0, /*pdata*/

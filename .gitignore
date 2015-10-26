@@ -4,14 +4,11 @@
 *.mk
 *.sublime-project
 *.sublime-workspace
-!.cproject
-!.project
-!*.launch
-/application/ipc_demo_sc_only/ipc_demo_project/ipc_demo/
 /application/ipc_integration/ipc/project/
 ipc_demo_project/
 os_psc9x3x/
 os_psc9x3x_drivers/
 rdb_project/
+
 
 

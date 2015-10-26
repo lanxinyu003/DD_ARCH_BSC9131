@@ -57,6 +57,7 @@ void osTickIntProgram()
     os_status status;
     uint32_t divider_value;
 
+#if 0
     // Tie the interrupt handler to the interrupt
     status = osHwiCreate(OS_INT_TM0, OS_HWI_PRIORITY0,
                         EDGE_MODE, osTickHwiHandler, 0);
@@ -69,6 +70,7 @@ void osTickIntProgram()
     /* Enable in periodic mode */
 
     WRITE_UINT32(g_dsp_plat_map->timer.platform_timer[0].tm_tc, 0x00000003);
+#endif
 
     /* save ticks parameter */
     g_tick_per_second = g_tick_parameter;

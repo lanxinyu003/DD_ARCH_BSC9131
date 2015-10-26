@@ -135,7 +135,7 @@ os_status osActivate(os_background_task_function background_task)
     OS_ASSERT_COND(g_int_disable_counter == 0);
  
     /* Start Multitasking. */
-    osFirstTimeSwitch();
+    //osFirstTimeSwitch();
 
     /* Execution should not reach this point. */
     RETURN_ERROR(OS_FAIL);

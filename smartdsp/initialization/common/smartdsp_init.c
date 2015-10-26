@@ -62,7 +62,7 @@
 #endif // OS_TOTAL_NUM_OF_TASKS
 
 
-extern uint32_t interr_vector_file[];
+//extern uint32_t interr_vector_file[];
 
 #ifndef OS_LOCAL_HEAP_MNGMNT_SIZE
 #define OS_LOCAL_HEAP_MNGMNT_SIZE       OS_LOCAL_HEAP_MNGMNT_DEFAULT_SIZE
@@ -201,14 +201,15 @@ status = osMemLocalInitialize(OS_TOTAL_NUM_OF_MEM_PARTS + OS_TOTAL_NUM_OF_FRAME_
     if (status != OS_SUCCESS)
         return status;
 #endif
+
  
 /* HARDWARE INTERRUPTS */
 
 #ifndef NO_HWI_INTERRUPTS
  
-    status = osHwiInitialize(&interr_vector_file);
-    if (status != OS_SUCCESS)
-        return status;
+    //status = osHwiInitialize(&interr_vector_file);
+    //if (status != OS_SUCCESS)
+        //return status;
 #endif
 
 /* HARDWARE TIMERS */
@@ -436,9 +437,9 @@ status = osMemLocalInitialize(OS_TOTAL_NUM_OF_MEM_PARTS + OS_TOTAL_NUM_OF_FRAME_
 #define OS_TOTAL_NUM_OF_TASKS 1
 #endif // OS_TOTAL_NUM_OF_TASKS
 
-    status = osTasksInitialize(OS_TOTAL_NUM_OF_TASKS);
-    if (status != OS_SUCCESS)
-        return status;
+    //status = osTasksInitialize(OS_TOTAL_NUM_OF_TASKS);
+    //if (status != OS_SUCCESS)
+        //return status;
 
  
 #if (OS_L1_DEFENSE == ON)

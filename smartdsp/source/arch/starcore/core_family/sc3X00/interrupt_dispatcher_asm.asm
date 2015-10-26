@@ -1,5 +1,5 @@
 ;/******************************************************************************
-; Copyright © 1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
+; Copyright ï¿½1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
 ; All Rights Reserved
 ; 
 ; This is proprietary source code of Freescale Semiconductor Inc., and its use
@@ -1235,7 +1235,7 @@ _osHwiPreciseDispatcher type func
 	pop.2l    n2:n3    pop.2l    n0:n1
 
     pop.2l    b6:b7    pop.2l    b4:b5
-    pop.2l    b2:b3    pop.2l    b0:b1
+    pop.2l    b2:b3    pop.2l    b0:b1																																																																																																												
     pop.2l    r6:r7    pop.2l    r4:r5
     pop.2l    r2:r3    pop.2l    r0:r1
 

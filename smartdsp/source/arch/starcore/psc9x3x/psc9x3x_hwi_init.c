@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright © 1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
+ Copyright ï¿½1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
  All Rights Reserved
  
  This is proprietary source code of Freescale Semiconductor Inc., and its use
@@ -53,6 +53,13 @@ extern general_interrupt_t general_ored_interrupt[];
 extern general_interrupt_t debug_ored_interrupt[];
 extern general_interrupt_t maple_ored_interrupt[];
 
+extern PHOENIX_TASKID os_create_task(PHOENIX_TASKTYPE task_type,
+									PHOENIX_TSKFUNC entry_function,
+									void * para_data,
+									PHOENIX_TASKID task_id,
+									PHOENIX_STKSIZE stack_size,
+									PHOENIX_TASKPRI task_priority,
+									PHOENIX_INTVECTOR task_vector);
 
 /**************************************************************************/
 /* utility function: prioritySet                    */
@@ -168,10 +175,10 @@ os_status osHwiInitialize(void *int_vec_add)
     }
 
     /* map default MMU exceptions */
-    status = osHwiCreate(OS_INT_DMMUAE,OS_HWI_PRIORITY0, EDGE_MODE, osHwiDMMUError,0);
-    OS_ASSERT_COND(status == OS_SUCCESS);
-    status = osHwiCreate(OS_INT_IMMUAE,OS_HWI_PRIORITY0, EDGE_MODE, osHwiIMMUError,0);
-    OS_ASSERT_COND(status == OS_SUCCESS);
+    //status = osHwiCreate(OS_INT_DMMUAE,OS_HWI_PRIORITY0, EDGE_MODE, osHwiDMMUError,0);
+    //OS_ASSERT_COND(status == OS_SUCCESS);
+    //status = osHwiCreate(OS_INT_IMMUAE,OS_HWI_PRIORITY0, EDGE_MODE, osHwiIMMUError,0);
+    //OS_ASSERT_COND(status == OS_SUCCESS);
 
     /* map general exception, only on . */
     status = osHwiCreate(OS_INT_ORED_GENERAL, OS_HWI_PRIORITY0, LEVEL_MODE, osHwiGeneralIsr, (os_hwi_arg)general_ored_interrupt);
@@ -202,6 +209,40 @@ os_status osHwiCreate(os_hwi_handle     hwi_num,
                       os_hwi_function   handler,
                       os_hwi_arg        argument)
 {
+    uint16_t        index;
+    uint32_t        mode_bit;
+    uint32_t        *trigger_reg_ptr;
+    uint32_t        trigger_reg;
+
+    index = (uint16_t)((hwi_num - 18) >> 5);          
+    trigger_reg_ptr = (uint32_t *)((g_dsp_plat_map->epic).p_elr);
+    trigger_reg_ptr += index;
+
+    mode_bit = (uint32_t)(0x00000001 << ((hwi_num - 18) & 0x001F));
+    if (mode == LEVEL_MODE)
+    {
+        READ_UINT32(trigger_reg, *trigger_reg_ptr);
+        trigger_reg &= ~mode_bit;
+        WRITE_UINT32(*trigger_reg_ptr, trigger_reg);
+    }
+    else if(mode == EDGE_MODE)
+    {
+        READ_UINT32(trigger_reg, *trigger_reg_ptr);
+        trigger_reg |= mode_bit;
+        WRITE_UINT32(*trigger_reg_ptr, trigger_reg);
+    }
+
+    (void)os_create_task(PHOENIX_TSK_INTTASK,
+					   (PHOENIX_TSKFUNC)handler,
+					   0,
+					   hwi_num,
+					   0,
+					   priority,
+					   (PHOENIX_INTVECTOR)(hwi_num - 18));
+
+    return OS_SUCCESS; 
+   
+#if 0
     os_status       status = OS_SUCCESS;
     os_hwi_status   int_status;
     uint16_t        index;
@@ -322,6 +363,8 @@ os_status osHwiCreate(os_hwi_handle     hwi_num,
     osHwiEnable(int_status);
 
     return status;
+
+#endif
 }
 
 /*************************************************************************/

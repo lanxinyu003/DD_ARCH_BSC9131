@@ -50,7 +50,7 @@ dsp_plat_sc3850_map_t   *g_dsp_plat_map;    /* DSP SC 3850 */
 psc9x3x_pa_ccsr_t       *g_dsp_pa_ccsr_map;    /* Control, Configuration and Status Registers */
 psc9x3x_ccsr_t          *g_dsp_ccsr_map;    /* Control, Configuration and Status Registers */
 extern uint8_t   g_dev_id;
-extern uint32_t *interr_vector_file;
+//extern uint32_t *interr_vector_file;
 
 os_status osL2CacheInitialize(uint32_t l2cache_size);
 
@@ -378,7 +378,7 @@ os_status psc9x3xInitialize(float clock_in,
 {
     os_status status;
 
-    OS_ASSERT_COND(IS_ALIGNED(&interr_vector_file, ALIGNED_4096_BYTES));
+    //OS_ASSERT_COND(IS_ALIGNED(&interr_vector_file, ALIGNED_4096_BYTES));
  
     g_dsp_plat_map     = (dsp_plat_sc3850_map_t *)qbus;
     g_dsp_pa_ccsr_map  = (psc9x3x_pa_ccsr_t *)pa_sys_regs;

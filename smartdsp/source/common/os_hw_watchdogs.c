@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright © 1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
+ Copyright ï¿½1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
  All Rights Reserved
  
  This is proprietary source code of Freescale Semiconductor Inc., and its use
@@ -29,6 +29,8 @@
 #include "os_rm_.h"
 #include "os_hw_watchdogs.h"
 #include "os_hw_watchdogs_.h"
+
+#define BSC9131_HW_WTD_INT_ID  20
 
 /* Globals: */
 os_swi_handle   watchdog_swi;

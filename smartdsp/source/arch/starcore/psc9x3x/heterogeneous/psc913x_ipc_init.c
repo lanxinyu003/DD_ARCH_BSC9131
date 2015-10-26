@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright © 1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
+ Copyright ï¿½1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
  All Rights Reserved
  
  This is proprietary source code of Freescale Semiconductor Inc., and its use
@@ -40,7 +40,6 @@
 #include "psc913x_ipc_.h"
 #include "psc913x_ipc.h"
 #include "psc913x_ipc_init.h"
-
 
 extern os_het_control_t  *g_os_het_control;
 
@@ -288,12 +287,12 @@ os_het_status_t osIpcChannelConsumerOpen(os_ipc_channel_consumer_open_params_t *
                 break;
             }
         }
-        if (interrupt_created == TRUE)
+        /*if (interrupt_created == TRUE)
         {
             OS_ASSERT;
             osHwiSwiftEnable();
             return OS_HETERO_FAIL;
-        }
+        }*/
  
         channel->local_channel.ind_offset = channel->heterogeneous_channel->ind_offset = (uint32_t)&g_dsp_plat_map->mmu.m_gpr0 - (uint32_t)&g_dsp_plat_map->mmu;
         channel->local_channel.ind_value  = channel->heterogeneous_channel->ind_value  = 1 << (SOC_MAX_NUM_OF_MESSAGES * (channel->consumer_index) + msg_num);

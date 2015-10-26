@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright © 1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
+ Copyright ï¿½1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
  All Rights Reserved
  
  This is proprietary source code of Freescale Semiconductor Inc., and its use
@@ -520,7 +520,7 @@ os_status osArchDevicesInitialize()
     status = aicInitialize((aic_init_params_t *)&aic_init_params);
     OS_RETURN_NO_SUCCESS(status);
 #endif // AIC
-
+    
 #if defined(PSC9132_FAMILY)
 #if ((CPRI0 == ON) || (CPRI1 == ON))
     status = hssiInitialize(NULL);
