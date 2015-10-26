@@ -1,0 +1,51 @@
+/*-----------------------------------------------------------------------*
+ 
+ demo.appli
+ 
+ *** Copyright Freescale Semiconductor, Inc, 2008 *** 
+ 
+ *-----------------------------------------------------------------------*/
+
+configuration
+	view Demo_View
+		section
+			program = [
+				M2__cacheable__sys__text : ".m2__cacheable__sys__text",
+				DDR__cacheable__sys__text : ".ddr__cacheable__sys__text"
+			]
+			data = [
+				M2__cacheable_wb__sys__data : ".m2__cacheable_wb__sys__data",
+				DDR__cacheable_wb__sys__data : ".ddr__cacheable_wb__sys__data",
+				DDR__non_cacheable_wt__sys__data : ".ddr__non_cacheable_wt__sys__data"
+			]
+			rom = [
+				M2__cacheable_wb__sys__rom : ".m2__cacheable_wb__sys__rom",
+				DDR__cacheable_wb__sys__rom : ".ddr__cacheable_wb__sys__rom",
+				DDR__non_cacheable_wt__sys__rom : ".ddr__non_cacheable_wt__sys__rom"
+			]
+			bss = [
+				M2__cacheable_wb__sys__bss : ".m2__cacheable_wb__sys__bss",
+				DDR__cacheable_wb__sys__bss : ".ddr__cacheable_wb__sys__bss",
+				DDR__non_cacheable_wt__sys__bss : ".ddr__non_cacheable_wt__sys__bss"
+			]
+		end section
+
+		Uninit_Globals_To_Bss=TRUE  /* Place uninitialized globals in section bss.*/
+		Switch_To_Rom=TRUE			/* Place switch tables in section rom.*/
+
+		program = M2__cacheable__sys__text
+		data = M2__cacheable_wb__sys__data
+		rom = M2__cacheable_wb__sys__rom
+		bss = M2__cacheable_wb__sys__bss
+
+		module "bsc9131_main" [
+			rom = M2__cacheable_wb__sys__rom
+			bss = DDR__cacheable_wb__sys__bss
+			data = M2__cacheable_wb__sys__data
+			
+			place (_DataIn) in M2__cacheable_wb__sys__data 
+			
+		]
+
+	end view
+end configuration

@@ -1,0 +1,162 @@
+#ifndef USING_USER_KA_STACK
+#define USING_USER_KA_STACK 0
+#endif
+
+#ifndef USING_RTLIB
+#define USING_RTLIB 0
+#endif
+
+#ifndef USING_VTB
+#define USING_VTB 0
+#endif
+
+/*******************************************************************/
+/* Places the Kernel Awareness stack at the virtual base of the    */
+/* private DDR1 memory.                                            */
+/* The RTLIB heap will be places after the Kernel Awareness stack. */
+/*                                                                 */
+/* Places the VTB buffer for profiling at the virtual base of the  */ 
+/* private DDR1 memory                                             */ 
+/*******************************************************************/
+
+
+#if  (USING_USER_KA_STACK == 1)
+_KernelAwareness_size  = 0x4000;
+_KernelAwareness_e     = _VirtLocalDataDDR1_e;
+_KernelAwareness_b     = _KernelAwareness_e - _KernelAwareness_size;
+#else
+_KernelAwareness_size = 0;
+#endif
+
+#if (USING_RTLIB == 1)
+__rtlibHeapSize = 0x4000;
+__TopOfHeap 	= _VirtLocalDataDDR1_e - _KernelAwareness_size;
+__BottomOfHeap 	= __TopOfHeap - __rtlibHeapSize;
+#else
+__rtlibHeapSize = 0;
+#endif
+
+#if (USING_VTB == 1)
+_VTB_size = 0x4000;
+_ENABLE_VTB 		= 1;
+_VTB_end   			= _VirtLocalDataDDR1_e - _KernelAwareness_size - __rtlibHeapSize;
+_VTB_start 			= _VTB_end - _VTB_size;
+#else
+_VTB_size = 0;
+#endif
+
+// Enable CPP exceptions handling
+ENABLE_EXCEPTION = 1;
+
+// Have to align to something linkable
+reserved_size = (_KernelAwareness_size + __rtlibHeapSize + _VTB_size) == 0xC000 ? 
+				0x10000 : (_KernelAwareness_size + __rtlibHeapSize + _VTB_size);
+
+// Local Memory
+// Put all the local memory segments to "local_data" 
+
+physical_memory private  ( * ) {
+
+	LOCAL_M2:   	org   = _PhysLocalDataM2_b,   len = _LocalDataM2_size;
+	LOCAL_DDR1: 	org   = _PhysLocalDataDDR1_b, len = _LocalDataDDR1_size; 
+	SHARED_CTRL:	org   = __SHARED_CTRL_b,      len = __SHARED_CTRL_size;
+	PA_CCSR  : 		org   = _PA_CCSR_b,   		  len = _PA_CCSR_size;
+}
+
+unit private (*) {
+
+	MEMORY {
+        os_kernel_text_descriptor              ("rx"): org = _PhysLocalDataM2_b; 
+		local_data_descriptor                  ("rw"): AFTER(os_kernel_text_descriptor);
+        os_shared_data_descriptor              ("rw"): AFTER(local_data_descriptor);         
+        local_data_ddr1_descriptor             ("rw"): org = _VirtLocalDataDDR1_b; 
+        local_data_ddr1_nocacheable_descriptor ("rw"): AFTER(local_data_ddr1_descriptor);
+        ddr_text_c                             ("rx"): AFTER(local_data_ddr1_nocacheable_descriptor); 
+	}  
+	
+    SECTIONS {
+        // os_shared_data exist in 9131 for backward compatability
+        descriptor_os_shared_data {
+            .os_shared_data
+            .os_shared_data_bss
+            reserved_crt_mutex
+        } > os_shared_data_descriptor;
+    
+        descriptor_local_data {
+             .oskernel_local_data
+             .data
+              ramsp_0
+             .oskernel_rom
+             .rom
+             .exception
+             .exception_index
+             .ramsp_0
+             .init_table
+             .rom_init
+             .rom_init_tables
+             .staticinit
+             LNK_SECTION(att_mmu, "rw", _MMU_TABLES_size, 0x4, ".att_mmu");
+             .bsstab
+             reserved_crt_tls
+             .oskernel_local_data_bss
+             //.bss
+        } > local_data_descriptor;
+        
+       descriptor_local_data_ddr1 {    
+             .local_data_ddr1
+             .local_data_ddr1_bss
+             .bss
+             LNK_SECTION(stack, "rw", _StackSize, 0x4,"stack");
+             LNK_SECTION(heap, "rw", _HeapSize, 0x8, "heap");
+        } > local_data_ddr1_descriptor;
+        
+        
+       descriptor_local_data_ddr1_nocacheable {    
+             .local_data_ddr1_nocacheable
+             .local_data_ddr1_nocacheable_bss
+        } > local_data_ddr1_nocacheable_descriptor;
+        
+        descriptor__ddr__cacheable__sys__text {
+			.os_intvec
+			.dd_intvec_text
+		} > ddr_text_c;
+                
+       descriptor_os_kernel_text {
+            .osvecb
+            .oskernel_text_run_time
+            .oskernel_text_run_time_critical
+            .oskernel_text_initialization
+            .unlikely
+            .text
+            .private_load_text
+            .default
+            .intvec
+        } > os_kernel_text_descriptor;        
+    }
+}
+
+address_translation (*) map11 {
+    os_kernel_text_descriptor              (SYSTEM_PROG_MMU_DEF):LOCAL_M2;	
+    local_data_descriptor                  (SYSTEM_DATA_MMU_DEF):LOCAL_M2,   AFTER(os_kernel_text_descriptor);
+	// reserve shared PA DDR space for running 
+	reserve (SHARED_DATA_MMU_DEF): __SHARED_CTRL_b, __SHARED_CTRL_b, __SHARED_CTRL_size, "rw";
+	reserve (SHARED_DATA_MMU_DEF): _PA_CCSR_b, _PA_CCSR_b, _PA_CCSR_size , "rw" ;
+}
+
+address_translation (*) {
+    os_shared_data_descriptor              (SHARED_DATA_MMU_DEF):LOCAL_M2,   AFTER(local_data_descriptor);
+    local_data_ddr1_descriptor             (SYSTEM_DATA_MMU_DEF):LOCAL_DDR1, org = _PhysLocalDataDDR1_b;
+    local_data_ddr1_nocacheable_descriptor (SHARED_DATA_MMU_DEF):LOCAL_DDR1, AFTER(local_data_ddr1_descriptor);  
+    ddr_text_c                             (SYSTEM_PROG_MMU_DEF):LOCAL_DDR1, AFTER(local_data_ddr1_nocacheable_descriptor);   
+     
+    
+#if  ((USING_USER_KA_STACK == 1) || (USING_RTLIB == 1) || (USING_VTB == 1))
+    reserve (SYSTEM_DATA_MMU_DEF): _PhysLocalDataDDR1_e - reserved_size, _VirtLocalDataDDR1_e - reserved_size, reserved_size, "rw";
+#endif
+}
+
+// Enable CPP symbols
+_cpp_staticinit_start= originof(".staticinit");
+_cpp_staticinit_end= endof(".staticinit");
+__exception_table_start__ = (ENABLE_EXCEPTION) ?originof(".exception_index"):0;
+__exception_table_end__ = (ENABLE_EXCEPTION) ?endof(".exception_index"):0; 

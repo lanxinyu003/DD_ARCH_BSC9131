@@ -1,0 +1,24 @@
+################################################################################
+# 生成文件和参数文件使用这些宏。
+# 如果在路径中包含空格与不能使用引号（"），
+# 一个使用反斜杠（\）来转义空格的宏的_ESCAPE版本被加上。
+################################################################################
+
+export CWInstallLocationEnv=C:/Program Files (x86)/Freescale/CW SC v10.5.2
+export PERIPHERALS=C:/OS/SmartDSP_PSC9131/include/arch/peripherals
+export SCEnvironmentEnv=$(CWInstallLocationEnv)/SC/StarCore_Support/compiler
+export CORE_FAMILY=C:/OS/SmartDSP_PSC9131/include/arch/starcore/core_family
+export STARCORE=C:/OS/SmartDSP_PSC9131/include/arch/starcore
+export PSC9X3X2=C:/OS/SmartDSP_PSC9131/include/arch/starcore/psc9x3x
+export SCLicenseFile3900Env=$(CWInstallLocationEnv)/SC/license.dat
+export PSC9X3X1=C:/OS/SmartDSP_PSC9131/demos/starcore/psc9x3x
+export PSC9X3X=C:/OS/SmartDSP_PSC9131/initialization/arch/psc9x3x
+export INCLUDE=C:/OS/SmartDSP_PSC9131/include
+export Gnu_Make_Install_DirEnv=$(CWInstallLocationEnv)/gnu/bin
+export COMMON=C:/OS/SmartDSP_PSC9131/initialization/common
+export ARCH=C:/OS/SmartDSP_PSC9131/initialization/arch
+export STARCORE1=C:/OS/SmartDSP_PSC9131/demos/starcore
+export SCToolsInstallDirEnv=$(CWInstallLocationEnv)/SC/StarCore_Support/compiler/bin
+export COMMON1=C:/OS/SmartDSP_PSC9131/source/common
+export RDB_SUPPORT=C:/OS/SmartDSP_PSC9131/demos/starcore/psc9x3x/rdb_support
+export INITIALIZATION=C:/OS/SmartDSP_PSC9131/initialization

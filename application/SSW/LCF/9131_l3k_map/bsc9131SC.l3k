@@ -1,0 +1,112 @@
+
+#include "common.l3k"
+#include "mmu_attr.l3k"
+
+// There is only one core.
+
+unit private (*){
+
+	MEMORY {
+		
+		data_boot_c ("rw"): org = _VIRTUAL_DATA_BOOT_start, len = _DATA_BOOT_size ; 
+		
+		m2_textboot_c ("rx"): org = _M2_start;
+		
+		m2_text_c ("rx"): org = _VIRTUAL_M2_text_start;
+		m2_data_c_wb ("rw"): org = _VIRTUAL_MEM_DATA_start;
+		
+		ddr_data_nc_wt ("rw"): AFTER(m2_data_c_wb);
+		ddr_data_c_wb ("rw"): AFTER(ddr_data_nc_wt);
+		ddr_text_c ("rx"): AFTER(ddr_data_c_wb);
+		
+	}
+
+	SECTIONS {
+
+
+		
+		descriptor__m2__cacheable__sys__text_boot {
+			. = align(0x1000); //restriction due to VBA register.
+			_VBAddr = .;	// Virtual Base Address must be set at the begging of the interrupt table.
+			.intvec
+			.text_boot
+		} > m2_textboot_c;
+		
+				
+		descriptor__m2__cacheable__sys__text {
+			.m2__cacheable__sys__text
+			.text
+			.default
+			reserved_crt_mutex
+			.unlikely
+		} > m2_text_c;
+
+		descriptor__xxx__cacheable_wb__sys__data__boot {
+			LNK_SECTION(att_mmu, "rw", _MMU_TABLES_size, 0x8, ".att_mmu");
+			LNK_SECTION(stack, "rw", _StackSize, 0x8,"stack");
+			.ovltab
+		} > data_boot_c;
+		
+		descriptor__m2__cacheable_wb__sys__data {
+			.m2__cacheable_wb__sys__rom
+			.m2__cacheable_wb__sys__data
+			.bsstab
+			.init_table
+			.rom_init
+			.rom_init_tables
+			.exception
+			.exception_index
+			.staticinit
+			.zdata
+			reserved_crt_tls
+			.rom
+			.data
+			LNK_SECTION(heap, "rw", _HeapSize, 0x8, "heap");
+			//.bss
+			//.m2__cacheable_wb__sys__bss
+		} > m2_data_c_wb;
+		
+			
+		descriptor__ddr__non_cacheable_wt__sys__data {
+			.ddr__non_cacheable_wt__sys__data
+			.ddr__non_cacheable_wt__sys__rom
+			.ddr__non_cacheable_wt__sys__bss
+		} > ddr_data_nc_wt;
+		
+		descriptor__ddr__cacheable_wb__sys__data {
+			.ddr__cacheable_wb__sys__data
+			unmatch_data("*");
+			.ddr__cacheable_wb__sys__rom
+			unmatch_rom("*");
+			.ddr__cacheable_wb__sys__bss
+			unmatch_bss("*");
+		} > ddr_data_c_wb;
+		
+		
+		descriptor__ddr__cacheable__sys__text {
+			.ddr__cacheable__sys__text
+			unmatch_pgm("*");
+		} > ddr_text_c;
+
+	}
+
+}
+
+
+address_translation (*) {
+	data_boot_c (SYSTEM_DATA_MMU_DEF): M2, org = _DATA_BOOT_start;
+	
+	m2_text_c (SYSTEM_PROG_MMU_DEF): M2;
+	m2_data_c_wb (SYSTEM_DATA_MMU_DEF): M2;
+	
+	ddr_data_nc_wt(SHARED_DATA_MMU_DEF):DDR;
+	ddr_data_c_wb(SYSTEM_DATA_MMU_DEF):DDR;
+	ddr_text_c(SYSTEM_PROG_MMU_DEF):DDR;
+}
+
+address_translation (*) map11 {
+
+	m2_textboot_c(SYSTEM_PROG_MMU_DEF): M2, org = _M2_start;
+	
+}
+

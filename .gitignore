@@ -4,11 +4,19 @@
 *.mk
 *.sublime-project
 *.sublime-workspace
-/application/ipc_integration/ipc/project/
-ipc_demo_project/
-os_psc9x3x/
-os_psc9x3x_drivers/
-rdb_project/
+.tags
+.tags_sorted_by_file
+log.txt
+.cwGeneratedFileSetLog
+ReferencedRSESystems.xml
+*.eld
+Basic Demo 9x31 - Debug/
+psc9x31LibDebug/
+psc9x31Lib/
+.settings/
 
 
 
+
+/application/phoenix_demo
+/application/ipc_integration
