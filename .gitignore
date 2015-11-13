@@ -14,9 +14,9 @@ Basic Demo 9x31 - Debug/
 psc9x31LibDebug/
 psc9x31Lib/
 .settings/
-
+*.map
 
 
 
 /application/phoenix_demo
-/application/ipc_integration
+/rdb_support/rdb_project/bsp_9131_rdb

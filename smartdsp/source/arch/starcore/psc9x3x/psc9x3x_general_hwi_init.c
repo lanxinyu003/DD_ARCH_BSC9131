@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright © 1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
+ Copyright ï¿½1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
  All Rights Reserved
  
  This is proprietary source code of Freescale Semiconductor Inc., and its use
@@ -41,13 +41,16 @@
 #include "psc913x_general_hwi_.h"
 #endif
 
+extern os_hwi_arg g_general_hwi_arg;
 
-void osHwiGeneralIsr(os_hwi_arg arg)
+//void osHwiGeneralIsr(os_hwi_arg arg)
+ void osHwiGeneralIsr(void)
 {
     uint32_t gir_val, gier_val;
-    uint32_t  start_index = arg;
+    //uint32_t  start_index = arg;
+    uint32_t  start_index = g_general_hwi_arg;
     uint32_t  i;
-    general_interrupt_t *general_interrupt = (general_interrupt_t *)arg;
+    general_interrupt_t *general_interrupt = (general_interrupt_t *)g_general_hwi_arg;
  
     for (i=0; general_interrupt[i].mask != 0; i++)
     {
@@ -56,7 +59,8 @@ void osHwiGeneralIsr(os_hwi_arg arg)
 
         if((gir_val & gier_val) & general_interrupt[i].mask)
         {
-            general_interrupt[i].callback(general_interrupt[i].arg);
+            //general_interrupt[i].callback(general_interrupt[i].arg);
+        	general_interrupt[i].callback();
             WRITE_SYNCIO_UINT32(*general_interrupt[i].gir_addr, general_interrupt[i].mask);
             return;
         }

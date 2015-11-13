@@ -203,8 +203,8 @@ os_status osMemSharedInitialize(uint8_t * shared_mngmnt_space,
                 a hardware interrupt.
 
 *//****************************************************************************/
-os_status   osHwiInitialize(void *int_vec_add);
-
+//os_status   osHwiInitialize(void *int_vec_add);
+os_status   osHwiInitialize(void);
 
 /**************************************************************************//**
  @Function      osTickInitialize

@@ -53,9 +53,10 @@ volatile uint16_t   g_os_interrupt_count;
 
 
 /*****************************************************************************/
-void osHwiNullHandler(os_hwi_arg arg)
+//void osHwiNullHandler(os_hwi_arg arg)
+void osHwiNullHandler(void)
 {
-    VAR_UNUSED(arg);
+    //VAR_UNUSED(arg);
     return;
 }
 
@@ -119,7 +120,7 @@ asm_body
 asm_end
 }
 
-
+#if 0
 
 void osHwiMultiplexedHandler(os_hwi_arg arg)
 {
@@ -148,3 +149,4 @@ void osHwiMultiplexedHandler(os_hwi_arg arg)
     return;
 }
 
+#endif

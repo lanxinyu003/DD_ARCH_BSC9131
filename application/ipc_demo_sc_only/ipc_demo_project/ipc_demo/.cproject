@@ -36,12 +36,12 @@
 							<builder buildPath="${ProjDirPath}/Basic Demo 9x31 - Debug" id="com.freescale.starcore.cdt.toolchain.root.builder.1364297885" keepEnvironmentInBuildfile="false" name="GNU Make Builder" parallelBuildWorkspaceOn="true" parallelizationNumber="-1" superClass="com.freescale.starcore.cdt.toolchain.root.builder"/>
 							<tool commandLinePattern="&quot;${SCToolsInstallDir}${COMMAND}&quot; ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT}" id="com.freescale.starcore.cdt.toolchain.base.scLinker.164488216" name="StarCore C/C++ Linker" superClass="com.freescale.starcore.cdt.toolchain.base.scLinker">
 								<option id="com.freescale.starcore.cdt.toolchain.scLinker.mapFile.1733067837" name="Map File" superClass="com.freescale.starcore.cdt.toolchain.scLinker.mapFile" value="../../ipc_demo_9x31_dbg.map" valueType="string"/>
-								<option id="com.freescale.starcore.cdt.toolchain.scLinker.commandFile.604958861" name="Linker Command File" superClass="com.freescale.starcore.cdt.toolchain.scLinker.commandFile" value="${ProjDirPath}\..\..\..\SSW\LCF\os_psc9x31_link.l3k" valueType="string"/>
+								<option id="com.freescale.starcore.cdt.toolchain.scLinker.commandFile.604958861" name="Linker Command File" superClass="com.freescale.starcore.cdt.toolchain.scLinker.commandFile" value="${ProjDirPath}\..\..\..\SSW\LCF\bsc9131_rdb.l3k" valueType="string"/>
 								<option id="com.freescale.starcore.cdt.toolchain.scLinker.extraArgs.322463278" name="Additional Options" superClass="com.freescale.starcore.cdt.toolchain.scLinker.extraArgs" value="-Xlnk &quot; -enable-error-placing-section-on-first-fit-basis -enable-display-padding-info  -disable-emit-machine-model-lcf -ignore-machine-model-specification&quot;" valueType="string"/>
 								<option id="com.freescale.starcore.cdt.toolchain.scLinker.libraries.additionalLibs.1893089194" name="Additional Libraries" superClass="com.freescale.starcore.cdt.toolchain.scLinker.libraries.additionalLibs" valueType="libs">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\..\..\..\..\phoenix\kernel\sc3850\phoenix_1.0_sc3850_debug.elb&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\..\..\..\..\smartdsp\lib\psc9x3x\os_psc9x31_debug.elb&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\..\..\..\..\rdb_support\bsp_psc9131rdb_debug.elb&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\..\..\..\..\smartdsp\lib\psc9x3x\os_psc9x31_debug.elb&quot;"/>
 								</option>
 								<inputType id="com.freescale.starcore.cdt.toolchain.scLinker.input.500364154" name="StarCore Linker Input" superClass="com.freescale.starcore.cdt.toolchain.scLinker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -110,8 +110,8 @@
 						</toolChain>
 					</folderInfo>
 					<fileInfo id="com.freescale.starcore.cdt.toolchain.config.debug.1600649655..cproject" name=".cproject" rcbsApplicability="disable" resourcePath=".cproject" toolsToInvoke=""/>
-					<fileInfo id="com.freescale.starcore.cdt.toolchain.config.debug.1600649655..project" name=".project" rcbsApplicability="disable" resourcePath=".project" toolsToInvoke=""/>
 					<fileInfo id="com.freescale.starcore.cdt.toolchain.config.debug.1600649655.os include/smartdsp_os.h" name="smartdsp_os.h" rcbsApplicability="disable" resourcePath="os include/smartdsp_os.h" toolsToInvoke=""/>
+					<fileInfo id="com.freescale.starcore.cdt.toolchain.config.debug.1600649655..project" name=".project" rcbsApplicability="disable" resourcePath=".project" toolsToInvoke=""/>
 					<fileInfo id="com.freescale.starcore.cdt.toolchain.config.debug.1600649655.os configuration/os_config.h" name="os_config.h" rcbsApplicability="disable" resourcePath="os_configuration/os_config.h" toolsToInvoke=""/>
 					<fileInfo id="com.freescale.starcore.cdt.toolchain.config.debug.1600649655.os configuration/smartdsp_init.h" name="smartdsp_init.h" rcbsApplicability="disable" resourcePath="os_configuration/smartdsp_init.h" toolsToInvoke=""/>
 					<sourceEntries>

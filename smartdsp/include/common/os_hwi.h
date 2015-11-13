@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright © 1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
+ Copyright ï¿½1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
  All Rights Reserved
  
  This is proprietary source code of Freescale Semiconductor Inc., and its use
@@ -135,7 +135,7 @@ os_status       osHwiDelete(os_hwi_handle hwi_num);
 #define osHwiRemove   osHwiDelete
 /**< see 'osHwiDelete' */
 
-
+#if 0
 /**************************************************************************//**
  @Function      osHwiMultiplexedCreate
 
@@ -164,7 +164,7 @@ os_status       osHwiMultiplexedCreate(os_hwi_handle   hwi_num,
                                        os_hwi_mode     mode,
                                        os_hwi_function handler,
                                        os_hwi_arg      argument);
-
+#endif
 
 /**************************************************************************//**
  @Function      osHwiMultiplexedDispatcherCreate
@@ -195,7 +195,7 @@ os_status       osHwiMultiplexedDispatcherCreate(os_hwi_handle     hwi_num,
                                                  os_hwi_function   handler,
                                                  os_hwi_arg        argument,
                                                  os_hwi_dispatcher dispatcher);
-
+#if 0
 /**************************************************************************//**
  @Function      osHwiMultiplexedDelete
 
@@ -216,7 +216,7 @@ os_status       osHwiMultiplexedDispatcherCreate(os_hwi_handle     hwi_num,
 os_status       osHwiMultiplexedDelete(os_hwi_handle     hwi_num,
                                        os_hwi_function   handler,
                                        os_hwi_arg        argument);
-
+#endif
 
 /**************************************************************************//**
  @Function      osHwiPrioritySet

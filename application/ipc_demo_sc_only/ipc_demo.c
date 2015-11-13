@@ -92,6 +92,8 @@ static os_het_status_t demoPointerChannelMessageSend(void* channel, void* messag
     OS_ASSERT_COND(status == OS_HETERO_SUCCESS);
 }
 
+static int intCount = 0;
+
 static void receiveMessageCallback(void* ch, void* data, uint32_t length)
 {
    uint32_t i;
@@ -99,6 +101,8 @@ static void receiveMessageCallback(void* ch, void* data, uint32_t length)
    os_het_status_t status;
    void     *peek_data;
    uint32_t  peek_length;
+   
+   intCount++;
  
    OS_ASSERT_COND(ch != NULL);
    data_begin = data_ptr = (uint32_t*)data;

@@ -186,6 +186,7 @@ void* osIpcDspChannelIdFind(uint32_t id)
     return NULL;
 }
 
+os_hwi_arg g_ipc_hwi_arg = 0;
 
 os_het_status_t osIpcChannelConsumerOpen(os_ipc_channel_consumer_open_params_t *params)
 {
@@ -239,6 +240,7 @@ os_het_status_t osIpcChannelConsumerOpen(os_ipc_channel_consumer_open_params_t *
     switch (params->indication_type)
     {
     case OS_HET_VIRTUAL_INT:
+    	
         status = osVirtualInterruptFind(&interrupt_handle);
         if(status != OS_SUCCESS)
         {
@@ -246,12 +248,14 @@ os_het_status_t osIpcChannelConsumerOpen(os_ipc_channel_consumer_open_params_t *
             osHwiSwiftEnable();
             return OS_HETERO_FAIL;
         }
- 
+        
         status = osHwiCreate((os_hwi_handle)(interrupt_handle),
             params->int_priority,
             EDGE_MODE,
             &osIpcMessageReceiveCb,
             (os_hwi_arg)channel);
+
+        g_ipc_hwi_arg = (os_hwi_arg)channel;
 
         if(status != OS_SUCCESS)
         {
@@ -278,6 +282,9 @@ os_het_status_t osIpcChannelConsumerOpen(os_ipc_channel_consumer_open_params_t *
                     EDGE_MODE,
                     &osIpcMessageReceiveCb,
                     (os_hwi_arg)channel);
+
+                g_ipc_hwi_arg = (os_hwi_arg)channel;
+
                 if(status != OS_SUCCESS)
                 {
                     OS_ASSERT;
@@ -287,12 +294,12 @@ os_het_status_t osIpcChannelConsumerOpen(os_ipc_channel_consumer_open_params_t *
                 break;
             }
         }
-        /*if (interrupt_created == TRUE)
+        if (interrupt_created == TRUE)
         {
             OS_ASSERT;
             osHwiSwiftEnable();
             return OS_HETERO_FAIL;
-        }*/
+        }
  
         channel->local_channel.ind_offset = channel->heterogeneous_channel->ind_offset = (uint32_t)&g_dsp_plat_map->mmu.m_gpr0 - (uint32_t)&g_dsp_plat_map->mmu;
         channel->local_channel.ind_value  = channel->heterogeneous_channel->ind_value  = 1 << (SOC_MAX_NUM_OF_MESSAGES * (channel->consumer_index) + msg_num);

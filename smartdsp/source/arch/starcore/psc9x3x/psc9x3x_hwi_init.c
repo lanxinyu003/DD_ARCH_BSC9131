@@ -134,22 +134,25 @@ static os_status setInterruptEnable(os_hwi_handle hwi_num,
     return OS_SUCCESS;
 }
 
+os_hwi_arg g_general_hwi_arg = 0;
+
 /**************************************************************************/
 /*
  * Has to be called only once, not multithreaded protected.
  */
-os_status osHwiInitialize(void *int_vec_add)
+//os_status osHwiInitialize(void *int_vec_add)
+os_status osHwiInitialize(void)
 {
     uint16_t     i;
     os_status status;
  
-    g_base_int_vect_add = (uint32_t *)int_vec_add;
+    //g_base_int_vect_add = (uint32_t *)int_vec_add;
     g_os_interrupt_count = 0;
     /* Disable ALL interrupts (except NMI) */
     osHwiSwiftDisable();
 
     /* Set the VBA */
-    osHwiSetVBA((uint32_t) g_base_int_vect_add);
+    //osHwiSetVBA((uint32_t) g_base_int_vect_add);
 
     /* Set Dispatchers interrupt table entries to osHwiNullHandler() */
     for (i = 0; i < MAX_INTERRUPTS; i++)
@@ -174,23 +177,29 @@ os_status osHwiInitialize(void *int_vec_add)
         WRITE_UINT32((g_dsp_plat_map->epic).p_ipr[i], 0xFFFFFFFF);
     }
 
+    #if 0
     /* map default MMU exceptions */
-    //status = osHwiCreate(OS_INT_DMMUAE,OS_HWI_PRIORITY0, EDGE_MODE, osHwiDMMUError,0);
-    //OS_ASSERT_COND(status == OS_SUCCESS);
-    //status = osHwiCreate(OS_INT_IMMUAE,OS_HWI_PRIORITY0, EDGE_MODE, osHwiIMMUError,0);
-    //OS_ASSERT_COND(status == OS_SUCCESS);
+    status = osHwiCreate(OS_INT_DMMUAE,OS_HWI_PRIORITY0, EDGE_MODE, osHwiDMMUError,0);
+    OS_ASSERT_COND(status == OS_SUCCESS);
+    status = osHwiCreate(OS_INT_IMMUAE,OS_HWI_PRIORITY0, EDGE_MODE, osHwiIMMUError,0);
+    OS_ASSERT_COND(status == OS_SUCCESS);
 
     /* map general exception, only on . */
     status = osHwiCreate(OS_INT_ORED_GENERAL, OS_HWI_PRIORITY0, LEVEL_MODE, osHwiGeneralIsr, (os_hwi_arg)general_ored_interrupt);
     OS_ASSERT_COND(status == OS_SUCCESS);
+
+    g_general_hwi_arg = (os_hwi_arg)general_ored_interrupt;
  
     /* map debug exception */
     status = osHwiCreate(OS_INT_ORED_DEBUG, OS_HWI_PRIORITY0, LEVEL_MODE, osHwiGeneralIsr, (os_hwi_arg)debug_ored_interrupt);
     OS_ASSERT_COND(status == OS_SUCCESS);
+
+    g_general_hwi_arg = (os_hwi_arg)general_ored_interrupt;
  
     /* map MAPLE general error */
     status = osHwiCreate(OS_INT_ORED_MAPLE, OS_HWI_PRIORITY0, LEVEL_MODE, osHwiGeneralIsr, (os_hwi_arg)maple_ored_interrupt);
     OS_ASSERT_COND(status == OS_SUCCESS);
+    #endif
 
     /* Enable interrupts */
     osHwiSwiftEnable();
@@ -214,6 +223,7 @@ os_status osHwiCreate(os_hwi_handle     hwi_num,
     uint32_t        *trigger_reg_ptr;
     uint32_t        trigger_reg;
 
+    /* handle the mode register ELRx */
     index = (uint16_t)((hwi_num - 18) >> 5);          
     trigger_reg_ptr = (uint32_t *)((g_dsp_plat_map->epic).p_elr);
     trigger_reg_ptr += index;
@@ -232,6 +242,7 @@ os_status osHwiCreate(os_hwi_handle     hwi_num,
         WRITE_UINT32(*trigger_reg_ptr, trigger_reg);
     }
 
+    /* create hwi task using phoenix API */
     (void)os_create_task(PHOENIX_TSK_INTTASK,
 					   (PHOENIX_TSKFUNC)handler,
 					   0,
@@ -239,6 +250,17 @@ os_status osHwiCreate(os_hwi_handle     hwi_num,
 					   0,
 					   priority,
 					   (PHOENIX_INTVECTOR)(hwi_num - 18));
+
+    /* Store handler into table */
+    interrupt_pointer[hwi_num] = handler;
+    if (hwi_num == OS_INT_ORED_GENERAL)
+        interrupt_argument[hwi_num] = (os_hwi_arg)general_ored_interrupt;
+    else if (hwi_num == OS_INT_ORED_DEBUG)
+        interrupt_argument[hwi_num] = (os_hwi_arg)debug_ored_interrupt;
+    else if (hwi_num == OS_INT_ORED_MAPLE)
+        interrupt_argument[hwi_num] = (os_hwi_arg)maple_ored_interrupt;
+    else
+        interrupt_argument[hwi_num] = argument;
 
     return OS_SUCCESS; 
    
@@ -509,6 +531,7 @@ os_status osHwiDelete(os_hwi_handle hwi_num)
     return osHwiCreate(hwi_num, 0, LEVEL_MODE, &osHwiNullHandler, 0);
 }
 
+#if 0
 /*************************************************************************/
 os_status osHwiMultiplexedCreate(os_hwi_handle     hwi_num,
                       os_hwi_priority   priority,
@@ -650,7 +673,7 @@ exit_func:
     return status;
 }
  
-
+#endif
  
 /*************************************************************************/
 static inline void move_to_end(multiplexed_hwi_t *iterator, multiplexed_hwi_t *this_int)
@@ -661,6 +684,7 @@ static inline void move_to_end(multiplexed_hwi_t *iterator, multiplexed_hwi_t *t
     this_int->next = NULL;
 }
 
+#if 0
 /*************************************************************************/
 os_status osHwiMultiplexedDelete(os_hwi_handle     hwi_num,
                       os_hwi_function   handler,
@@ -758,6 +782,7 @@ exit_func:
  
 }
 
+#endif
 
 /*************************************************************************/
 os_status osHwiGpioMap(os_hwi_handle hwi_num, unsigned int *gpio_pin)

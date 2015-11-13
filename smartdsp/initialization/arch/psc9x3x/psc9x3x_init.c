@@ -294,8 +294,8 @@ uint32_t          g_background_stack_size = sizeof(g_background_stack);
 #endif // OS_MULTIMODE
 
 /* main stack (become ISR stack) for OS use - the variable name must remain as defined ! */
-uint8_t  StackStart[ALIGN_SIZE(OS_STACK_SIZE,8)];
-#pragma align StackStart            8
+//uint8_t  StackStart[ALIGN_SIZE(OS_STACK_SIZE,8)];
+//#pragma align StackStart            8
 
 
 /***********************************************************************//*
@@ -481,12 +481,12 @@ os_status osArchInitialize()
 #define MMU_PROG_CONTEXT_NUM 12
 #endif
 
-    status = osMmuInit(MMU_DATA_CONTEXT_NUM, MMU_PROG_CONTEXT_NUM);
+    /*status = osMmuInit(MMU_DATA_CONTEXT_NUM, MMU_PROG_CONTEXT_NUM);
     if(OS_SUCCESS != status)
     {
         OS_ASSERT;
         return status;
-    }
+    }*/
 
 #endif
     return status;

@@ -75,9 +75,10 @@ void osHwiSetVBA(uint32_t vector_address);
  @Param[in]    arg -  Hardware interrupt argument (unused).
  
 *//***************************************************************************/
-void osHwiNullHandler(os_hwi_arg arg);
+//void osHwiNullHandler(os_hwi_arg arg);
+void osHwiNullHandler(void);
 
-
+#if 0
 /**************************************************************************//**
  @Function      osHwiMultiplexedHandler
 
@@ -87,6 +88,7 @@ void osHwiNullHandler(os_hwi_arg arg);
  
 *//***************************************************************************/
 void osHwiMultiplexedHandler(os_hwi_arg arg);
+#endif
 
 /**************************************************************************//**
  @Function      osHwiIsPreciseException

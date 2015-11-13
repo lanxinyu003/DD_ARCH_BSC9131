@@ -1,190 +1,236 @@
-// common.l3k
-// *** Copyright Freescale Semiconductor, Inc, 2010 *** 
+/******************************************************************************
+/* 头文件名:  common_ads.l3k                                                      *
+/* 功能    :  链接描述文件 公共文件                                           */
+/******************************************************************************/
 
-// This file provides definition common to all cores.
+arch(psc9131);
+number_of_cores(1);
 
- arch(psc9131);
- number_of_cores(1);
- 
- entry("___crt0_start");
+entry("___crt0_start");
 
- _NUMBER_OF_CORES = 1;
- 
-// The value to set the Core Status Register (SR) after reset:
-//  - Exception mode
-//  - Interrupt level 31
-//  - Saturation mode enabled
-//  - Rounding mode: nearest even
- _SR_Setting = 0x3e4000c;
+_NUMBER_OF_CORES = 1;
 
-/** M2/L2 size 
-*	If user wants to change the configuration he must uncomment the text below
-*	Default value speciffied in Machine Model is _M2_Setting = 0x0f that coresponds to M2_size = 256KB;
-*/
+_SR_Setting = 0x3e4000c;
 
-// BSC9131 memory layout
+_M2_Setting = 0x0f;
 
-// ---------------------------------
-// _M2_Setting configuration for M2
-// ------------------
-// M2 size  Rule-set
-// ------------------
-//   0KB     0x00 - all used as L2Cache
-//  64KB     0x01
-// 128KB     0x03
-// 192KB     0x07
-// 256KB     0x0f
-// 320KB     0x1f
-// 384KB     0x3f
-// 448KB     0x7f
-// 512KB     0xff
+_M2_Setting_Core_Diff = _M2_Setting;
 
- _M2_Setting= 0x0f;
+ASSERT ((_M2_Setting == 0x01) ||
+        (_M2_Setting == 0x03) ||
+        (_M2_Setting == 0x07) ||
+        (_M2_Setting == 0x0f) ||
+        (_M2_Setting == 0x1f) ||
+        (_M2_Setting == 0x3f) ||
+        (_M2_Setting == 0x7f) ||
+        (_M2_Setting == 0xff) ||
+        (_M2_Setting == 0x00), "_M2_Setting Assert - not a possible value");
 
-ASSERT ((_M2_Setting == 0x01) || 
-		 (_M2_Setting == 0x03) || 
-		 (_M2_Setting == 0x07) || 
-		 (_M2_Setting == 0x0f) || 
-		 (_M2_Setting == 0x1f) || 
-		 (_M2_Setting == 0x3f) || 
-		 (_M2_Setting == 0x7f) || 
-		 (_M2_Setting == 0xff) ||
-		 (_M2_Setting == 0x00), "_M2_Setting Assert - not a possible value");
-		 
+M2_is_L2_cache = 0; // If the whole M2 was configured as cache?
 
+#if (M2_is_L2_cache != 0)
+/* when whole M2 is configured as L2 cache: _M2_Setting should be 0x00 */
+ASSERT (_M2_Setting == 0x00, "_M2_Setting must be 0x00 when the whole M2 was configured as L2 cache.");
+/* when whole M2 is configured as L2 cache: _ENABLE_VTB can't be 0x1 */
+ASSERT ((_ENABLE_VTB == 0x00) || (_ENABLE_VTB == 0x02) ||(_ENABLE_VTB == 0x03), "VTB should be disable or reserved in M3 or DDR.");
+#endif
 
-assert( ((_M2_Setting == 0x00 && _ENABLE_VTB != 1) || (_M2_Setting != 0x00)), "VTB should be reserved in M3 or DDR ");
+_M2_size_total_size = 0x80000;
 
-/**
-* Machine Model defined Symbols - Memory sizes
-*/
+_M2_start   =   0xB0000000;
+_M2_size    =   (_M2_Setting == 0x01) ? 0x10000 :
+                (_M2_Setting == 0x03) ? 0x20000 :
+                (_M2_Setting == 0x07) ? 0x30000 :
+                (_M2_Setting == 0x0f) ? 0x40000 : // 256KB L2 Memory with 256KB L2 Cache
+                (_M2_Setting == 0x1f) ? 0x50000 :
+                (_M2_Setting == 0x3f) ? 0x60000 :
+                (_M2_Setting == 0x7f) ? 0x70000 :
+                (_M2_Setting == 0xff) ? 0x80000 :
+                0x0;    // M2 size.
+_M2_end =       _M2_start + _M2_size - 1 ;
 
- _M2_start	=	0xB0000000  ;
- _M2_size	=	(_M2_Setting == 0x01) ? 0x10000 :
-				(_M2_Setting == 0x03) ? 0x20000 :
-				(_M2_Setting == 0x07) ? 0x30000 :
-				(_M2_Setting == 0x0f) ? 0x40000 :
-				(_M2_Setting == 0x1f) ? 0x50000 :
-				(_M2_Setting == 0x3f) ? 0x60000 :
-				(_M2_Setting == 0x7f) ? 0x70000 :
-				(_M2_Setting == 0xff) ? 0x80000 :
-				0x0;	// M2 size.
- _M2_end =		_M2_start + _M2_size - 1 ;
+__L2_cache_size = _M2_size_total_size - _M2_size;
+/*;;;;;;;;;;;;;;;;;;;;;;;;定义M2存储器分块;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;*/
+// M2 Layout:
+// All M2 exclude cache is used as private data section
 
- _DDR_start	=	0x00000000;
- _DDR_size	=	0x20000000;		//DDR size (512M)
- _DDR_end	=	_DDR_start + _DDR_size -1;
- 
+_M2_PARTITION_PRIVATE_DATA_SIZE       = _M2_size;                       /*每个核私有数据段               */
+
+_PHYS_M2_PRIVATE_DATA_START = _M2_start;
+_PHYS_M2_PRIVATE_DATA_END = _PHYS_M2_PRIVATE_DATA_START + _M2_PARTITION_PRIVATE_DATA_SIZE - 1;
+_VIRT_M2_PRIVATE_DATA_START = _PHYS_M2_PRIVATE_DATA_START;              /* 虚拟地址与实地址相同          */
+_VIRT_M2_PRIVATE_DATA_END = _PHYS_M2_PRIVATE_DATA_END;
+
+_VBAddr = _VIRT_DDR_PRIVATE_TEXT_START;									/*中断向量表放DDR代码段的起始地址*/
+/*;;;;;;;;;;;;;;;;;;;;;;;;定义Flash存储器;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;*/
+// Flash Layout:
  _Flash_start	= 0x80000000;
  _Flash_size	= 0x10000000;
  _Flash_end		= _Flash_start + _Flash_size -1;
- 
- /* Define the physical memories*/
- 
- physical_memory private (*) {
-	M2: org = _M2_start, len = _M2_size;
-	DDR: org = _DDR_start, len = _DDR_size;
-	
-	FLASH: org = _Flash_start, len = _Flash_size;
- }
+/*;;;;;;;;;;;;;;;;;;;;;;;;定义DDR存储器分块;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;*/
+// DDR Layout:
+_DDR_start =     0x38000000;                                        //DDR物理地址起始
+_DDR_size =      0x08000000;                                        //DDR size (1GB)
+_DDR_end =       _DDR_start + _DDR_size -1;                         //DDR物理地址起始结束 
 
-// Application memory layout
-// ===========================
-// There are two distinct virtual spaces:
-// - One for program
-// - One for data (due to MMU implementation).
-// These two spaces may overlap and have the range 0..4G.
+_DDR_PARTITION_PRIVATE_DATA_SIZE                = 0x00800000;       // 私有数据段大小 256MB
+_DDR_PARTITION_PRIVATE_TEXT_SIZE                = 0x00400000;       // Private Code - 128MB.
+_DDR_PARTITION_PRIVATE_NON_CACHEABLE_DATA_SIZE  = 0x00400000;       // Non cacheable数据段 128MB
+//启动数据段及堆栈 16MB
+_DDR_4_SYMBOL_TABLE_SIZE = 0x01000000; /* 符号表内存空间 16MB */
+//余下的空间(512-16*2)MB保留
 
-// Shared IPC data is mapped in M3
-// Private data is mapped in M2,M3 and DDR
-// Shared data and code is mapped in M3, DDR
-// Private code stays in M2
+/*;;;;;;;;;;;;;;;;;;;;;;;;定义mmu表和启动堆栈;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;*/
+_MMU_TABLES_size = 0x400;/* 编译后生成的MMU table 大小        */
+_StackSize       = 0x800000 - _MMU_TABLES_size;/* startup 阶段使用的堆栈大小，8M   */
+_HeapSize        = 0x800000;/*堆大小为2M，放于堆栈高端           */
 
-
-// Define size for Boot/MMU tables 
- _MMU_TABLES_size= 0x100;
-
-// Define the size of stack.
- _StackSize = 0x7f00;
- 
 // The size of boot descriptor must be power of two.
- _DATA_BOOT_size = _MMU_TABLES_size + _StackSize ;
- 
-// Define the size of Heap to 4k 
- _HeapSize= 0x1000;
+_DATA_BOOT_size = _MMU_TABLES_size + _StackSize + _HeapSize;
 
-// Define sizes for private text and data
- _PRIVATE_M2_TEXT_size = 0x2000;
- _PRIVATE_M2_DATA_size =  _M2_size - _PRIVATE_M2_TEXT_size - _DATA_BOOT_size;
+/* 虚拟，boot起始地址，必须为2的幂   */
+_VIRT_DATA_BOOT_start =  0x3a000000; //_DDR_start
+                	   //+ _DDR_PARTITION_PRIVATE_DATA_SIZE
+                       //+ _DDR_PARTITION_PRIVATE_TEXT_SIZE
+                       //+ _DDR_PARTITION_PRIVATE_NON_CACHEABLE_DATA_SIZE;
+
+_VIRT_DATA_BOOT_size = _DATA_BOOT_size;
+_VIRT_HEAP_size =  _HeapSize;
 
 
-// Define the size for private data to stay in DDR
- _PRIVATE_DDR_DATA_size = 0x80000;
-
-// Defines for virtual memory map placement
- _VIRTUAL_MEM_DATA_start= 0x70000000;
- _VIRTUAL_DATA_BOOT_start =	0x20000000;
- _VIRTUAL_M2_text_start  = 0x38000000;
- 
 // Stack and heap area boundaries in virtual private memory data space, for runtime support
- _StackStart=  originof("stack");
- _TopOfStack =(endof("stack")-7)&0xFFFFFFF8;
- __BottomOfHeap = originof("heap");
- __TopOfHeap =  (endof("heap")-7)&0xFFFFFFF8;
+_StackStart=  originof("stack");
+_TopOfStack =(endof("stack")-7)&0xFFFFFFF8;
+__BottomOfHeap = originof("heap");
+__TopOfHeap =  (endof("heap")-7)&0xFFFFFFF8;
+
+/********************************************************************************************************************/
+// Layout start from here.
+// DDR Private Data Segment. 256MB
+// DDR Private Code Segment. 128MB
+// DDR NonCachable Data Segment. 128MB
+
+// DDR cacheable private data on core0. 0x10000000 = 256MB
+//Physical: 0x00000000 ~ 0x10000000, virtual: 0x00000000 ~ 0x10000000
+_PHYS_DDR_PRIVATE_DATA_START = 0x38000000; //_DDR_start;
+_PHYS_DDR_PRIVATE_DATA_END = _PHYS_DDR_PRIVATE_DATA_START + _DDR_PARTITION_PRIVATE_DATA_SIZE - 1;
+_VIRT_DDR_PRIVATE_DATA_START = _PHYS_DDR_PRIVATE_DATA_START;
+_VIRT_DDR_PRIVATE_DATA_END = _PHYS_DDR_PRIVATE_DATA_END;
+_DDR_PRIVATE_DATA_SIZE_INVALID_FLAG = _PHYS_DDR_PRIVATE_DATA_START % _DDR_PARTITION_PRIVATE_DATA_SIZE;
+ASSERT((_DDR_PRIVATE_DATA_SIZE_INVALID_FLAG == 0x0),"DDR PRIVATE DATA START is not align with DATA_SIZE!");
+
+
+// DDR private code on core0. 0x08000000 = 128MB
+//Physical: 0x10000000 ~ 0x18000000, virtual: 0x10000000 ~ 0x18000000
+_PHYS_DDR_PRIVATE_TEXT_START = 0x38800000; //_DDR_start
+                             //+ _DDR_PARTITION_PRIVATE_DATA_SIZE;
+							 
+_PHYS_DDR_PRIVATE_TEXT_END = _PHYS_DDR_PRIVATE_TEXT_START
+                           + _DDR_PARTITION_PRIVATE_TEXT_SIZE -1;
+
+_VIRT_DDR_PRIVATE_TEXT_START = _PHYS_DDR_PRIVATE_TEXT_START;
+_VIRT_DDR_PRIVATE_TEXT_END  = _PHYS_DDR_PRIVATE_TEXT_END;
+_DDR_PARTITION_PRIVATE_TEXT_SIZE_INVALID_FLAG = _PHYS_DDR_PRIVATE_TEXT_START
+                                              % _DDR_PARTITION_PRIVATE_TEXT_SIZE;
+ASSERT((_DDR_PARTITION_PRIVATE_TEXT_SIZE_INVALID_FLAG == 0x0),"DDR PARTITION PRIVATE TEXT SIZE is not align with DATA_SIZE!");
+
+
+// DDR noncacheable data on core0. 0x08000000 = 128MB
+//Physical: 0x18000000 ~ 0x20000000, virtual: 0x18000000 ~ 0x20000000
+_PHYS_DDR_NONCACHEABLE_DATA_START = 0x38C00000; //_DDR_start
+				                  //+ _DDR_PARTITION_PRIVATE_DATA_SIZE
+				                  //+ _DDR_PARTITION_PRIVATE_TEXT_SIZE;
+								  
+_PHYS_DDR_NONCACHEABLE_DATA_END = _PHYS_DDR_NONCACHEABLE_DATA_START
+                                + _DDR_PARTITION_PRIVATE_NON_CACHEABLE_DATA_SIZE - 1;
+_VIRT_DDR_NONCACHEABLE_DATA_START = _PHYS_DDR_NONCACHEABLE_DATA_START;
+_VIRT_DDR_NONCACHEABLE_DATA_END = _PHYS_DDR_NONCACHEABLE_DATA_END;
+_DDR_NONCACHEABLE_DATA_SIZE_INVALID_FLAG = _PHYS_DDR_NONCACHEABLE_DATA_START
+                                         % _DDR_PARTITION_PRIVATE_NON_CACHEABLE_DATA_SIZE;
+ASSERT((_DDR_NONCACHEABLE_DATA_SIZE_INVALID_FLAG == 0x0),"DDR NONCACHEABLE DATA START is not align with DATA_SIZE!");
+
+
+//启动区及堆栈16MB
+// DDR stack and heap on core0. Size: 0x01000000 = 16MB
+//Physical: 0x20000000 ~ 0x21000000, virtual: 0x20000000 ~ 0x21000000
+_PHYS_DDR_STK_HEAP_START = 0x39000000; //_DDR_start
+                //+ _DDR_PARTITION_PRIVATE_DATA_SIZE
+                //+ _DDR_PARTITION_PRIVATE_TEXT_SIZE
+                //+ _DDR_PARTITION_PRIVATE_NON_CACHEABLE_DATA_SIZE;
+				
+_PHYS_DDR_STK_HEAP_END   = _PHYS_DDR_STK_HEAP_START + _DATA_BOOT_size - 1;
+_VIRT_DDR_STK_HEAP_START = _PHYS_DDR_STK_HEAP_START;
+_VIRT_DDR_STK_HEAP_END   = _PHYS_DDR_STK_HEAP_END - _DATA_BOOT_size;
+_DATA_BOOT_SIZE_INVALID_FLAG = _PHYS_DDR_STK_HEAP_START
+                             % _DATA_BOOT_size;
+ASSERT((_DATA_BOOT_SIZE_INVALID_FLAG == 0x0),"DATA BOOT size is not align with DATA_SIZE!");
+
+// 符号表16MB
+_DDR_4_SYMBOL_TABLE_ADDR_START = 0x3a000000; //_DDR_start
+                			   //+ _DDR_PARTITION_PRIVATE_DATA_SIZE
+			                   //+ _DDR_PARTITION_PRIVATE_TEXT_SIZE
+               				   //+ _DDR_PARTITION_PRIVATE_NON_CACHEABLE_DATA_SIZE
+               				   //+ _DATA_BOOT_size; /* 符号表应该固定地址,此处的地址可能会变化,在具体项目中再修改 */ 
+_PHY_DDR_4_SYMBOL_TABLE_ADDR_START = _DDR_4_SYMBOL_TABLE_ADDR_START 
+								   + _DDR_4_SYMBOL_TABLE_SIZE;
+_PHY_DDR_4_SYMBOL_TABLE_ADDR_END = _PHY_DDR_4_SYMBOL_TABLE_ADDR_START 
+								   +  _DDR_4_SYMBOL_TABLE_SIZE - 1;	
+_VIRT_DDR_4_SYMBOL_TABLE_ADDR_START = _DDR_4_SYMBOL_TABLE_ADDR_START;
+_VIRT_DDR_4_SYMBOL_TABLE_ADDR_END = _VIRT_DDR_4_SYMBOL_TABLE_ADDR_START 
+								   +  _DDR_4_SYMBOL_TABLE_SIZE - 1;	
+
+// PSC9131 DDR1 new System map:
+// +---------------+ 
+// |    PA Only    |
+// |    PA r/w     |
+// .    SC -/-     .
+// +===============+ 
+// |    PA r/w     | }PA owns memory allocator. Cacheable in SmartDSP OS
+// |    SC r/w     | }
+// +---------------+ 
+// |    PA r/w     | }SC owns memory allocator. Cacheable in SmartDSP OS
+// |    SC r/w     | }
+// +===============+ 
+// |    Control    | }4KB (part of the PA owned memory below). Non-cacheable in SmartDSP OS
+// +===============+ 
+// |    SC Only    |
+// |    PA r/-     | (at boot time, PA r/w)
+// |    SC r/w     |
+// +---------------+
+
+// physical memory on board
+ //_DDR1_b    = 0x38000000;			   // start of SC space in DDR1 
+ //_DDR1_size = 0x08000000;		       // size of SC space in DDR1
+// _DDR1_e    = (_DDR1_b + _DDR1_size) - 1;
+ 
+_PA_CCSR_b   = 0xFEF00000;
+_PA_CCSR_size= 0x100000;
   
-
-
-// Application physical layout
-// ===========================
-
-// Define the physical memory for M2 private data
- _M2_PRIVATE_start = _M2_start ;
+ // 4KB part of the PA owned memory. Non-cacheable in SmartDSP OS
+ __SHARED_CTRL_b    = 0x37000000;	// Shared Control PA DDR base address
+ __SHARED_CTRL_size = 0x1000;
+ ASSERT ((__SHARED_CTRL_size == 0x1000),"__SHARED_CTRL_size MUST start out as 4KB"); 
  
-// Define the physical memory for DDR private data
- _DDR_PRIVATE_start= _DDR_start;
-								
+               			
+RENAME "*startup_*.eln", ".text", ".startup_text"
+RENAME "*startup_*.eln", ".data", ".startup_data"
+RENAME "*startup_*.eln", ".bss", ".startup_bss"
+RENAME "*startup_*.eln", ".rom", ".startup_rom"
 
-// The descriptor for att_mmu tables and stack is placed at the end of shared M3
- _DATA_BOOT_start = _M2_end - _DATA_BOOT_size + 1;
- _DATA_BOOT_end = _DATA_BOOT_start + _DATA_BOOT_size - 1;
+RENAME "*rtlib_*.elb(*)",".text", ".rtlib_text"
+RENAME "*rtlib_*.elb(*)",".data", ".rtlib_data"
+RENAME "*rtlib_*.elb(*)",".bss", ".rtlib_bss"
+RENAME "*rtlib_*.elb(*)",".rom", ".rtlib_rom"
 
+RENAME "*phoenix_1.0_sc3850_*.elb(main.eln)" ,".text" ,".core_diff_main"
 
-// Reserve VTB are in physical memory
-// Set VTB start address and size for M2, M3 and DDR
- _M2_VTB_size= 0x1000;	//4K for each core
- _DDR_VTB_size= 0x1000;	//4K for each core
- 
- 
- _VTB_size = (_ENABLE_VTB == 1)? _M2_VTB_size: 
-						 (_ENABLE_VTB == 2)? _DDR_VTB_size:
-							0x0;
-							
- _VTB_start= (_ENABLE_VTB == 1)?( _M2_end - _DATA_BOOT_size -_M2_VTB_size + 1): 
-						 (_ENABLE_VTB == 2)? (_DDR_end  - _DDR_VTB_size + 1): 
-							0x0;
+RENAME "*phoenix_1.0_sc3850_*.elb(*)", ".text", ".os_text_section"
+RENAME "*phoenix_1.0_sc3850_*.elb(*)", ".data", ".os_data_section"
+RENAME "*phoenix_1.0_sc3850_*.elb(*)", ".bss", ".os_bss_section"
+RENAME "*phoenix_1.0_sc3850_*.elb(*)", ".rom", ".os_rom_section"
 
-
- _VTB_end =  _VTB_start + _VTB_size;
-
-physical_memory private (*){
-			reserve: org = _VTB_start, len = _VTB_size;	
-}
-
-
-// Renaming program sections that are part of the boot code from 
-// runtime library and OS library.
-RENAME "*startup*.eln", ".text", ".text_boot"
-RENAME "*rtlib_*.elb(target_asm_start.eln)", ".text", ".text_boot"
-RENAME "*rtlib_*.elb(target_c_start.eln)", ".text", ".text_boot"
-RENAME "*rtlib_*.elb(classic_syscall.eln)", ".text", ".text_boot"
-RENAME "*hostio_*.elb(hsst_syscall.eln)", ".text", ".text_boot"
-
-//For C++ projects, the value will be overwritten in the command line.
-ENABLE_EXCEPTION = 0x0;
-
-_cpp_staticinit_start= originof(".staticinit");
-_cpp_staticinit_end= endof(".staticinit");
-
-__exception_table_start__ = (ENABLE_EXCEPTION) ?originof(".exception_index"):0;
-__exception_table_end__ = (ENABLE_EXCEPTION) ?endof(".exception_index"):0; 
+RENAME "*dd_msc8157_lib_*.elb(*)", ".text", ".dd_text_section"
+RENAME "*dd_msc8157_lib_*.elb(*)", ".data", ".dd_data_section"
+RENAME "*dd_msc8157_lib_*.elb(*)", ".bss", ".dd_bss_section"
+RENAME "*dd_msc8157_lib_*.elb(*)", ".rom", ".dd_rom_section"
 

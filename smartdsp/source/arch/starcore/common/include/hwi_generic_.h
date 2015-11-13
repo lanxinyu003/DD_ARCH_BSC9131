@@ -38,8 +38,8 @@ typedef struct _general_interrupt_t
     uint16_t          hwi_num;
 } general_interrupt_t;
 
-void osHwiGeneralIsr(os_hwi_arg arg);
-
+//void osHwiGeneralIsr(os_hwi_arg arg);
+void osHwiGeneralIsr(void);
 
 os_status osHwiCreateGeneral(os_hwi_handle     hwi_num,
                              os_hwi_function   handler,

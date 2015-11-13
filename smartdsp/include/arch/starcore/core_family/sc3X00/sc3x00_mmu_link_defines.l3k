@@ -37,3 +37,4 @@
 // MMU_FLEX_SEGMENT_MODEL =                     0x80000000;	// - will be set by the startup hooks
  MMU_NEXT_LINE_PREFETCH =                       0x40000000;
 
+_ENABLE_MMU_TRANSLATION=	1 ;

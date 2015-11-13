@@ -192,7 +192,8 @@ os_het_status_t osIpcMessageSendPtr(
  @Cautions      None
  
 *//***************************************************************************/
-void osIpcMessageReceiveCb(os_hwi_arg ch);
+//void osIpcMessageReceiveCb(os_hwi_arg ch);
+void osIpcMessageReceiveCb(void);
 
 /**************************************************************************//**
  @Function      osIpcChannelPeek

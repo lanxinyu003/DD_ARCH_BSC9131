@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright © 1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
+ Copyright ï¿½1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
  All Rights Reserved
  
  This is proprietary source code of Freescale Semiconductor Inc., and its use
@@ -231,12 +231,18 @@ os_het_status_t osIpcMessageSendPtr(void *ch, void *data, uint32_t length, bool 
     return status;
 }
 
-void osIpcMessageReceiveCb(os_hwi_arg ch)
+extern os_hwi_arg g_ipc_hwi_arg;
+
+//void osIpcMessageReceiveCb(os_hwi_arg ch)
+void osIpcMessageReceiveCb(void)
 {
-    os_ipc_channel_t *channel = (os_ipc_channel_t*)ch;
+    os_ipc_channel_t *channel = (os_ipc_channel_t*)g_ipc_hwi_arg;
     void*            data_pointer;
     uint32_t         data_length;
  
+    /* notice: the hwi number may change */
+    osHwiPendingClear((os_hwi_handle)210);
+    
     OS_ASSERT_COND(channel != NULL);
     OS_ASSERT_COND(channel->consumer_index == osGetCoreID());
     osVerifyChannelProducerInitialized(channel);
@@ -286,6 +292,7 @@ void osIpcMessageReceiveCb(os_hwi_arg ch)
  
     osHwiSwiftEnable();
 }
+
 
 os_het_status_t osIpcChannelPeek(void* ch, void **data_pointer, uint32_t *data_length)
 {

@@ -206,10 +206,12 @@ status = osMemLocalInitialize(OS_TOTAL_NUM_OF_MEM_PARTS + OS_TOTAL_NUM_OF_FRAME_
 /* HARDWARE INTERRUPTS */
 
 #ifndef NO_HWI_INTERRUPTS
- 
+#if 1 
     //status = osHwiInitialize(&interr_vector_file);
-    //if (status != OS_SUCCESS)
-        //return status;
+    status = osHwiInitialize();
+    if (status != OS_SUCCESS)
+        return status;
+#endif
 #endif
 
 /* HARDWARE TIMERS */

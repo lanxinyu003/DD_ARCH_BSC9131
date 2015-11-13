@@ -1,127 +1,180 @@
-// mmu_attr_cpp.l3k
-// *** Copyright Freescale Semiconductor= Inc= 2010 *** 
+/******************************************************************************
+/******************************************************************************
+/* 头文件名:  mmu_attributes.txt
+/******************************************************************************/
 
-// This file provides definition for MMU and Cache configuration
+                                                                         /*用于设置 M_PSDAx                   */
+MMU_PROG_DEF_SHARED        =             0x00000010; // SSVPM bit[4]      /*程序描述符 共享空间                */
+MMU_PROG_DEF_CACHEABLE     =             0x00000008; // IC bit[3]         /*程序描述符 可cache空间             */
+MMU_PROG_DEF_XPERM_USER    =             0x00000004; // PAPU bit[2]       /*程序描述符 用户                    */
+MMU_PROG_DEF_XPERM_SUPER   =             0x00000002; // PAPS bit[1]       /*程序描述符 系统                    */
 
-//	ARCHITECTURE DEPENDANT SYMBOLS DEFINED IN MACHINE MODEL 
+                                                                         /*用于设置 M_PSDBx                   */
+MMU_PROG_L2CACHEABLE       =             0x00080000; // PL2CP[3,4]        /*程序描述符B 可被L2 cacheable       */
+MMU_PROG_PREFETCH_ENABLE   =             0x00040000; // PPFE[2]           /*程序描述符B 预取允许               */
+MMU_PROG_BURST_SIZE_4      =             0x00020000; // PBS[1,0] VBR =4   /*程序描述符B 突发大小为4            */
+MMU_PROG_BURST_SIZE_1      =             0x00000000; // PBS[1,0] VBR =1   /*程序描述符B 突发大小为1            */
 
-//used to set M_PSDAx "Program Segment Descriptor Registers A (M_PSDAx)"
- 
- MMU_PROG_DEF_SHARED		=	0x00000010 ; // SSVPM bit[4]
- MMU_PROG_DEF_CACHEABLE		=	0x00000008 ; // IC bit[3]
- MMU_PROG_DEF_XPERM_USER	=	0x00000004 ; // PAPU bit[2]
- MMU_PROG_DEF_XPERM_SUPER	=	0x00000002 ; // PAPS bit[1]
-
-
-//used to set M_PSDBx "Program Segment Descriptor Registers B (M_PSDBx)"
- MMU_PROG_L2CACHEABLE 		=	0x00080000; // PL2CP[3 =4]
- MMU_PROG_PREFETCH_ENABLE	=	0x00040000 ; // PPFE[2]
- MMU_PROG_BURST_SIZE_4		=	0x00020000 ; // PBS[1 =0] VBR =4
- MMU_PROG_BURST_SIZE_1		=	0x00000000 ; // PBS[1 =0] VBR =1
-
-//used to set M_PSDCx "Program Segment Descriptor Registers C (M_PSDCx)"
- MMU_PROG_NEXT_LINE_PFETCH =				0x00004000 ; // PNLP[30]
+                                                                          /*用于设置 M_PSDCx                     */
+MMU_PROG_NEXT_LINE_PFETCH  =             0x00004000; // PNLP[30]           /*程序描述符C 预取下一条cacheline    */
 
 
-// Data descriptors
-//used to set M_DSDAx "Data Segment Descriptor Registers A (M_DSDAx)"
- MMU_DATA_DEF_SHARED		=	0x00000020 ; // SSVDM[5]
- MMU_DATA_DEF_RPERM_USER	=	0x00000010 ; // DAPU[4 =3]
- MMU_DATA_DEF_WPERM_USER	=	0x00000008 ; // DAPU[4 =3]
- MMU_DATA_DEF_RPERM_SUPER	=	0x00000004 ; // DAPS[2 =1]
- MMU_DATA_DEF_WPERM_SUPER	=	0x00000002 ; // DAPS[2 =1]
+                                                                          /*数据描述符A寄存器                  */
+MMU_DATA_DEF_SHARED        =             0x00000020; // SSVDM[5]           /*数据描述符 共享数据段              */
+MMU_DATA_DEF_RPERM_USER    =             0x00000010; // DAPU[4,3]          /*数据描述符 用户可读                */
+MMU_DATA_DEF_WPERM_USER    =             0x00000008; // DAPU[4,3]          /*数据描述符 用户可写                */
+MMU_DATA_DEF_RPERM_SUPER   =             0x00000004; // DAPS[2,1]          /*数据描述符 管理员可读              */
+MMU_DATA_DEF_WPERM_SUPER   =             0x00000002; // DAPS[2,1]          /*数据描述符 管理员可写              */
 
-//used to set M_DSDBx "Data Segment Descriptor Registers B (M_DSDBx)"
- MMU_DATA_NONCACHEABLE_WRITE_THROUGH	=	0x00800000 ; // DWP[6 =7]
- MMU_DATA_CACHEABLE_WRITE_BACK			=	0x00400000 ; // DWP[6 =7]
- MMU_DATA_CACHEABLE_WRITE_THROUGH		=	0x00000000 ; // DWP[6 =7]
- MMU_DATA_L2CACHEABLE_WRITE_THROUGH		=	0x00000000 ; // DL2CP[5 =3]
- MMU_DATA_L2CACHEABLE_ADAPTIVE_WRITE	=	0x00180000 ; // DL2CP[5 =3]
- MMU_DATA_L2NONCACHEABLE				=	0x00100000 ; // DL2CP[5 =3]
- MMU_DATA_L2CACHEABLE_WRITE_BACK		=	0x00080000 ; // DL2CP[5 =3]
- MMU_DATA_PREFETCH_ENABLE				=	0x00040000 ; // DPFE[2]
- MMU_DATA_BURST_SIZE_4					=	0x00020000 ; // DBS[1 =0]
- MMU_DATA_BURST_SIZE_1					=	0x00000000 ; // DBS[1 =0]
-
+                                                                          /*用于设置 M_DSDBx                   */
+MMU_DATA_NONCACHEABLE_WRITE_THROUGH  =   0x00800000; // DWP[6,7]           /*数据描述符  不可cache，穿写        */
+MMU_DATA_CACHEABLE_WRITE_BACK        =   0x00400000; // DWP[6,7]           /*数据描述符  可cache，回写          */
+MMU_DATA_CACHEABLE_WRITE_THROUGH     =   0x00000000; // DWP[6,7]           /*数据描述符  可cache，穿写          */
+MMU_DATA_L2CACHEABLE_WRITE_THROUGH   =   0x00000000; // DL2CP[5,3]         /*数据描述符  可L2 cache，穿写       */
+MMU_DATA_L2CACHEABLE_ADAPTIVE_WRITE  =   0x00180000; // DL2CP[5,3]         /*数据描述符  可L2 cache，自适应写   */
+MMU_DATA_L2NONCACHEABLE              =   0x00100000; // DL2CP[5,3]         /*数据描述符  不可L2 cache           */
+MMU_DATA_L2CACHEABLE_WRITE_BACK      =   0x00080000; // DL2CP[5,3]         /*数据描述符  可L2 cache，回写       */
+MMU_DATA_PREFETCH_ENABLE             =   0x00040000; // DPFE[2]            /*数据描述符  允许数据预取           */
+MMU_DATA_BURST_SIZE_4                =   0x00020000; // DBS[1,0]           /*数据描述符  突发大小 4             */
+MMU_DATA_BURST_SIZE_1                =   0x00000000; // DBS[1,]            /*数据描述符  突发大小 1             */
 
 
-// Definitions for 'sets' of settings
- USER_DATA_MMU_DEF	=	MMU_DATA_CACHEABLE_WRITE_BACK|
-                        MMU_DATA_PREFETCH_ENABLE|
-                        MMU_DATA_L2CACHEABLE_WRITE_BACK |
-                        MMU_DATA_DEF_WPERM_USER|
-                        MMU_DATA_DEF_RPERM_USER|
-                        MMU_DATA_DEF_WPERM_SUPER |
-                        MMU_DATA_DEF_RPERM_SUPER |
-                        MMU_DATA_BURST_SIZE_4;
+/*用户程序描述符默认属性             */
+USER_PROG_MMU_DEF  =   MMU_PROG_DEF_CACHEABLE |
+                       MMU_PROG_PREFETCH_ENABLE |
+                       MMU_PROG_L2CACHEABLE |
+                       MMU_PROG_NEXT_LINE_PFETCH |
+                       MMU_PROG_DEF_XPERM_USER|
+                       MMU_PROG_DEF_XPERM_SUPER |
+                       MMU_PROG_BURST_SIZE_4;
 
- SHARED_DATA_MMU_DEF=	MMU_DATA_NONCACHEABLE_WRITE_THROUGH|
-                        MMU_DATA_L2NONCACHEABLE |
-                        MMU_DATA_PREFETCH_ENABLE|
-                        MMU_DATA_DEF_SHARED|
-                        MMU_DATA_DEF_WPERM_USER|
-                        MMU_DATA_DEF_RPERM_USER|
-                        MMU_DATA_DEF_WPERM_SUPER |
-                        MMU_DATA_DEF_RPERM_SUPER |
-                        MMU_DATA_BURST_SIZE_4;
+/*共享程序描述符默认属性             */
+SHARED_PROG_MMU_DEF  = MMU_PROG_DEF_CACHEABLE |
+                       MMU_PROG_PREFETCH_ENABLE |
+                       MMU_PROG_L2CACHEABLE |
+                       MMU_PROG_NEXT_LINE_PFETCH |
+                       MMU_PROG_DEF_SHARED|
+                       MMU_PROG_DEF_XPERM_USER|
+                       MMU_PROG_DEF_XPERM_SUPER |
+                       MMU_PROG_BURST_SIZE_4;
 
-
- SYSTEM_DATA_MMU_DEF=	MMU_DATA_CACHEABLE_WRITE_BACK|
-                        MMU_DATA_PREFETCH_ENABLE|
-                        MMU_DATA_L2CACHEABLE_WRITE_BACK|
-                        MMU_DATA_DEF_SHARED|
-                        MMU_DATA_DEF_WPERM_USER|
-                        MMU_DATA_DEF_RPERM_USER|
-                        MMU_DATA_DEF_WPERM_SUPER |
-                        MMU_DATA_DEF_RPERM_SUPER |
-                        MMU_DATA_BURST_SIZE_4;
-
- USER_PROG_MMU_DEF	=	MMU_PROG_DEF_CACHEABLE |
-                        MMU_PROG_PREFETCH_ENABLE |
-                        MMU_PROG_L2CACHEABLE |
-                        MMU_PROG_NEXT_LINE_PFETCH|
-                        MMU_PROG_DEF_XPERM_USER|
-                        MMU_PROG_DEF_XPERM_SUPER |
-                        MMU_PROG_BURST_SIZE_4;
-
- SHARED_PROG_MMU_DEF=	MMU_PROG_DEF_CACHEABLE |
-                        MMU_PROG_PREFETCH_ENABLE |
-                        MMU_PROG_L2CACHEABLE |
-                        MMU_PROG_NEXT_LINE_PFETCH|
-                        MMU_PROG_DEF_SHARED|
-                        MMU_PROG_DEF_XPERM_USER|
-                        MMU_PROG_DEF_XPERM_SUPER |
-                        MMU_PROG_BURST_SIZE_4;
+/*寄存器为noncacheable               */
+MAPLE_BD_RAM_DEF   =   MMU_DATA_NONCACHEABLE_WRITE_THROUGH|
+                       MMU_DATA_L2NONCACHEABLE |
+                       MMU_DATA_DEF_SHARED|
+                       MMU_DATA_DEF_WPERM_USER |
+                       MMU_DATA_DEF_RPERM_USER |
+                       MMU_DATA_DEF_WPERM_SUPER |
+                       MMU_DATA_DEF_RPERM_SUPER |
+                       MMU_DATA_BURST_SIZE_4;
 
 
- SYSTEM_PROG_MMU_DEF=	SHARED_PROG_MMU_DEF;
+QUICC_BD_RAM_DEF   =   MMU_DATA_NONCACHEABLE_WRITE_THROUGH|
+                       MMU_DATA_L2NONCACHEABLE |
+                       MMU_DATA_DEF_SHARED|
+                       MMU_DATA_DEF_WPERM_SUPER |
+                       MMU_DATA_DEF_RPERM_SUPER |
+                       MMU_DATA_BURST_SIZE_1;
 
- _MMU_HIGH_PRIORITY	=	0x10000000 ;
 
- _SYSTEM_TASK_ID	=	0;
+/*用户数据描述符默认属性             */
+USER_DATA_MMU_DEF  =   MMU_DATA_CACHEABLE_WRITE_BACK|
+                       MMU_DATA_PREFETCH_ENABLE |
+                       MMU_DATA_L2CACHEABLE_WRITE_BACK |
+                       MMU_DATA_DEF_WPERM_USER |
+                       MMU_DATA_DEF_RPERM_USER |
+                       MMU_DATA_DEF_WPERM_SUPER |
+                       MMU_DATA_DEF_RPERM_SUPER |
+                       MMU_DATA_BURST_SIZE_4;
 
-// The second hook (__target_c_start() function) can set descriptors for only one user task=
-// the value of task identification is set by _ENABLE_DEFAULT_TASK_ID symbol
- _ENABLE_DEFAULT_TASK_ID	=	1;
+/*共享数据描述符默认属性             */
+NONCACHEABLE_SHARED_DATA_MMU_DEF  = MMU_DATA_NONCACHEABLE_WRITE_THROUGH|
+                                    MMU_DATA_L2NONCACHEABLE |
+                                    MMU_DATA_PREFETCH_ENABLE |
+                                    MMU_DATA_DEF_SHARED |
+                                    MMU_DATA_DEF_WPERM_USER |
+                                    MMU_DATA_DEF_RPERM_USER |
+                                    MMU_DATA_DEF_WPERM_SUPER |
+                                    MMU_DATA_DEF_RPERM_SUPER |
+                                    MMU_DATA_BURST_SIZE_4;
 
+CACHEABLE_SHARED_DATA_MMU_DEF = MMU_DATA_CACHEABLE_WRITE_BACK|
+                                MMU_DATA_L2CACHEABLE_WRITE_BACK |
+                                MMU_DATA_PREFETCH_ENABLE |
+                                MMU_DATA_DEF_SHARED |
+                                MMU_DATA_DEF_WPERM_USER |
+                                MMU_DATA_DEF_RPERM_USER |
+                                MMU_DATA_DEF_WPERM_SUPER |
+                                MMU_DATA_DEF_RPERM_SUPER |
+                                MMU_DATA_BURST_SIZE_4;
+
+/*系统数据描述符默认属性             */
+SYSTEM_DATA_MMU_DEF = MMU_DATA_CACHEABLE_WRITE_BACK|
+                      MMU_DATA_PREFETCH_ENABLE|
+                      MMU_DATA_L2CACHEABLE_WRITE_BACK |
+                      MMU_DATA_DEF_SHARED|
+                      MMU_DATA_DEF_WPERM_USER|
+                      MMU_DATA_DEF_RPERM_USER|
+                      MMU_DATA_DEF_WPERM_SUPER |
+                      MMU_DATA_DEF_RPERM_SUPER |
+                      MMU_DATA_BURST_SIZE_4;
+
+SYSTEM_ROM_MMU_DEF = MMU_DATA_CACHEABLE_WRITE_BACK|
+                     MMU_DATA_PREFETCH_ENABLE|
+                     MMU_DATA_L2CACHEABLE_WRITE_BACK |
+                     MMU_DATA_DEF_SHARED|
+                     MMU_DATA_DEF_RPERM_USER|
+                     MMU_DATA_DEF_RPERM_SUPER |
+                     MMU_DATA_BURST_SIZE_4;
+
+
+UEC_BD_MMU_DEF  =   MMU_DATA_NONCACHEABLE_WRITE_THROUGH|
+                    MMU_DATA_PREFETCH_ENABLE|
+                    MMU_DATA_L2NONCACHEABLE |
+                    MMU_DATA_DEF_WPERM_SUPER |
+                    MMU_DATA_DEF_RPERM_SUPER |
+                    MMU_DATA_BURST_SIZE_4;
+
+_MMU_PROG_DEF_SYSTEM  =                  MMU_PROG_DEF_SHARED;
+_MMU_DATA_DEF_SYSTEM  =                  MMU_DATA_DEF_SHARED;
+
+SYSTEM_PROG_MMU_DEF  = SHARED_PROG_MMU_DEF;
+_MMU_HIGH_PRIORITY   = 0x10000000;
+_SYSTEM_TASK_ID      = 0;
+
+
+/*设置MMU控制寄存器 (M_CR)           */
 // -1 = the MMU memory protection is off.
 // in rest of case the MMU memory protection is on.
- _ENABLE_MMU_PROTECTION	=	1 ;
+_ENABLE_MMU_PROTECTION  =  1;/* MPE[3]                            */
 
 // -1 = the MMU translation is off.
 // in rest of case the MMU translation is on.
- _ENABLE_MMU_TRANSLATION=	1 ;
+_ENABLE_MMU_TRANSLATION  = 1;/* ATE[2]                            */
 
-// -1 = all types of cache are not enabled in the third hook (__target_setting() function)
-// in rest of case all types of cache are enabled in the third hook (__target_setting() function)
- _ENABLE_CACHE	=	1 ;
-
-// 1 = the Data Non-aligned Memory Exception is enabled in second hook (__target_c_start() function)
+// 1 = the Data Non-aligned Memory Exception is enabled in second hook
+// (__target_c_start() function)
+// -1= Data Non-aligned Memory Exception is off
 // in rest of case the Data Non-aligned Memory Exception is disabled
- _ENABLE_MMU_DATA_NON_ALIGNED	=	1;
+_ENABLE_MMU_DATA_NON_ALIGNED  = 1;/*DNAMEE[6]                          */
+
+// The second hook (__target_c_start() function) can
+// set descriptors for only one user task,
+// the value of task identification is set by _ENABLE_DEFAULT_TASK_ID symbol
+_ENABLE_DEFAULT_TASK_ID  = 1;
+
+
+//  -1 = all types of cache are not enabled in the third hook
+//  (__target_setting() function)
+//  in rest of case all types of cache are enabled in the third hook
+//  (__target_setting() function)
+// Sets L2_CR2[CE], IC_CR2[CE], DC_CR2[CE]
+_ENABLE_CACHE  = 1;
+
 
 // Definitions for the VTB
 // if 1 = reserve VTB in M2 memory
-// if 2 = reserve VTB in DDR memory
+// if 2 = reserve VTB in M3 memory
+// if 3 = reserve VTB in DDR memory
 // else VTB will not be configured automatically
- _ENABLE_VTB	=		0;
+_ENABLE_VTB  = 0;

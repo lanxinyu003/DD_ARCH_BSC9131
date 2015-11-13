@@ -55,7 +55,7 @@ void os_create_tasks(void)
 		0x0, /*pdata*/
 		512	/*in sizeof(C64_STACK) 8bit*/
 		);
-#if 0
+
 	
 	os_create_task(OS_TSK_PRITASK, /*task type*/
 		appBackground,	/*task entry function*/
@@ -64,7 +64,7 @@ void os_create_tasks(void)
 		4096, /*in sizeof(C64_STACK) 8bit*/
 		24,	/*priority*/
 		NULLVECTOR); /*interrupt pin*/
-	
+#if 0	
 	os_create_task(OS_TSK_PRITASK, /*task type*/
 		t_dsp_check_io,	/*task entry function*/
 		0x0, /*pdata*/
@@ -123,6 +123,8 @@ void os_start_handler1(void)
     } */	
 }
 
+extern volatile int g_int_disable_counter;
+
 // Os start handler1. Interrupt was enabled.
 void os_start_handler2(void)
 {
@@ -168,6 +170,9 @@ void os_start_handler2(void)
     //(void)fdd_dspbsp_init_hook_end();*/
 	
 	os_smartdsp_init();
+	
+	/* enable interrupt */
+	g_int_disable_counter = 0;
 }
 
 void fdd_excep_return_func()

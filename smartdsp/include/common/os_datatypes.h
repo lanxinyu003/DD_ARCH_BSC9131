@@ -299,8 +299,8 @@ typedef uint16_t                        os_msg_handle,
  @Description   Hardware Interrupt function prototype.
 
 *//***************************************************************************/
-typedef void (*os_hwi_function)(os_hwi_arg);
-
+//typedef void (*os_hwi_function)(os_hwi_arg);
+typedef void (*os_hwi_function)(void);
 
 /**************************************************************************//**
  @Description   Hardware Interrupt dispatcher prototype.

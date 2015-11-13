@@ -90,9 +90,6 @@
 			<name>.external_binary/Projects</name>
 		</group>
 		<group>
-			<name>SSW/LCF</name>
-		</group>
-		<group>
 			<name>os include/arch</name>
 		</group>
 		<group>
@@ -145,6 +142,11 @@
 		</group>
 	</groupResources>
 	<linkedResources>
+		<link>
+			<name>LCF</name>
+			<type>2</type>
+			<locationURI>PARENT-3-PROJECT_LOC/SSW/LCF</locationURI>
+		</link>
 		<link>
 			<name>Application_File/demo.appli</name>
 			<type>1</type>
@@ -219,36 +221,6 @@
 			<name>os_configuration/smartdsp_init.h</name>
 			<type>1</type>
 			<locationURI>CW_IMPORTER_SMARTDSP/initialization/common/include/smartdsp_init.h</locationURI>
-		</link>
-		<link>
-			<name>SSW/LCF/bsc9131SC.l3k</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/SSW/LCF/bsc9131SC.l3k</locationURI>
-		</link>
-		<link>
-			<name>SSW/LCF/common.l3k</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/SSW/LCF/common.l3k</locationURI>
-		</link>
-		<link>
-			<name>SSW/LCF/mmu_attr.l3k</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/SSW/LCF/mmu_attr.l3k</locationURI>
-		</link>
-		<link>
-			<name>SSW/LCF/os_psc9x31_link.l3k</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/SSW/LCF/os_psc9x31_link.l3k</locationURI>
-		</link>
-		<link>
-			<name>SSW/LCF/psc9x31_local_map_link.l3k</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/SSW/LCF/psc9x31_local_map_link.l3k</locationURI>
-		</link>
-		<link>
-			<name>SSW/LCF/psc9x31_memory_map_link.l3k</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/SSW/LCF/psc9x31_memory_map_link.l3k</locationURI>
 		</link>
 		<link>
 			<name>os include/arch/smartdsp_os_device.h</name>

@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright © 1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
+ Copyright ï¿½1995-2003,2004,2005-2014 Freescale Semiconductor Inc.
  All Rights Reserved
  
  This is proprietary source code of Freescale Semiconductor Inc., and its use
@@ -63,7 +63,7 @@ uint32_t osHwWatchdogCounterGet(os_watchdog_handle watchdog_id)
 
 /*****************************************************************************/
 
-
+#if 0
 static void _osHwWatchdogIsr(os_watchdog_handle watchdog_id)
 {
     uint32_t wdt_source;
@@ -78,7 +78,7 @@ static void _osHwWatchdogIsr(os_watchdog_handle watchdog_id)
     /* call user function */
     watchdogs[watchdog_id].nmi_handler(wdt_source);
 }
-
+#endif
 /***********************************************************************//**
                 To API documentaion of osHwWatchdogCreate()
                 timer_count (in) - The timeout period of the watchdog, in system clocks.
@@ -121,11 +121,12 @@ os_status osHwWatchdogCreate(   os_watchdog_handle watchdog_id,
         if (mode == GENERATE_RESET)
             RETURN_ERROR(OS_ERR_WDT_INVALID_MODE);
  
-        status = osHwiCreate(OS_INT_ORED_WDT,
+        /*status = osHwiCreate(OS_INT_ORED_WDT,
                     OS_HWI_PRIORITY_NMI,
                     LEVEL_MODE,
                     _osHwWatchdogIsr,
-                    watchdog_id);
+                    watchdog_id);*/
+        status = OS_SUCCESS;
  
     }
     return status;
